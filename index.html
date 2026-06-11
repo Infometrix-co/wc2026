@@ -72,6 +72,19 @@
          color: #fff; font-weight: 700; font-size: 0.9rem; padding: 11px 20px;
          border-radius: 8px; text-decoration: none; box-shadow: var(--shadow); }
   .cta:hover { opacity: 0.92; }
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes ctaPulse {
+      0%   { box-shadow: var(--shadow), 0 0 0 0 rgba(22,82,128,0.45); }
+      70%  { box-shadow: var(--shadow), 0 0 0 12px rgba(22,82,128,0); }
+      100% { box-shadow: var(--shadow), 0 0 0 0 rgba(22,82,128,0); }
+    }
+    @keyframes ctaArrow {
+      0%, 100% { transform: translateX(0); }
+      50%      { transform: translateX(4px); }
+    }
+    .cta { animation: ctaPulse 2.5s ease-out infinite; }
+    .cta .cta-arrow { display: inline-block; animation: ctaArrow 2.5s ease-out infinite; }
+  }
   .live-strip { display: flex; gap: 12px; overflow-x: auto; margin: -8px 0 36px; }
   .live-card { flex: 1 1 0; min-width: 210px; background: var(--card);
                border: 1px solid var(--border); border-radius: 8px;
@@ -290,6 +303,7 @@
   qualifying statistics, tactical analysis, and 1,245 verified player records — every
   classification traced to data, every uncertainty flagged.</p>
   <div class="stat-chips" id="statChips"></div>
+  <a class="cta" id="exploreCtaHero" href="#explorer">Pick any two teams — explore the matchup <span class="cta-arrow">→</span></a>
   <hr>
 </header>
 
@@ -329,7 +343,7 @@
     <span class="attr">— attributed to W. Edwards Deming</span>
   </p>
   <p class="sources">Tactical analysis &middot; Tournament forecasts: The Athletic &middot;
-    Qualifying stats: FBref &middot; Squad data: 1,245 players &middot; 48 nations</p>
+    Qualifying stats: FBref &middot; Squad data: 1,245 players &middot; 48 nations &middot; Squad values: Transfermarkt</p>
 </section>
 
 <!-- ============ SECTION 2 — GROUP STAGE ============ -->
@@ -345,7 +359,7 @@
   <p class="fx-subtitle" id="fxSubtitle">Times shown in your local timezone &middot; BST shown for reference &middot; Source: Wikipedia / FIFA match schedule</p>
   <div class="tabbar" id="fxTabs" role="tablist"></div>
   <div class="fixture-list" id="fxList"></div>
-  <a class="cta" id="exploreCta" href="#explorer">Pick any two teams — explore the matchup →</a>
+  <a class="cta" id="exploreCta" href="#explorer">Pick any two teams — explore the matchup <span class="cta-arrow">→</span></a>
 </section>
 
 <!-- ============ SECTION 3 — MATCHUP EXPLORER ============ -->
@@ -2203,13 +2217,12 @@ showGroupFixtures("A");
 /* ============ HERO STAT CHIPS (computed from embedded data) ============ */
 {
   const chipsEl = document.getElementById("statChips");
-  // No squad market-value source exists in this project, so the budget chip
-  // carries no figures by design.
+  // Squad market values from Transfermarkt's WC2026 participant table (2026-06-11).
   const items = [
     `${TEAMS.length} teams`,
     `${new Set(TEAMS.map(t => t.archetype)).size} archetypes`,
     `${FIXTURES.length} group fixtures`,
-    `\u{1F4B0} Archetype logic over budget`
+    `\u{1F4B0} France €1.5bn · Jordan €20m — a 75× gap`
   ];
   for (const s of items) {
     const c = document.createElement("span");
