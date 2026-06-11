@@ -1,0 +1,2475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC2026 — The Archetype Framework</title>
+<style>
+  :root {
+    --bg:          #FFFFFF;
+    --surface:     #F8F9FA;
+    --card:        #FFFFFF;
+    --border:      #E8EAED;
+    --ink:         #0D1117;
+    --ink-soft:    #4A5568;
+    --ink-muted:   #9AA5B4;
+    --maestros:    #C99A1E;
+    --controllers: #1D8A4E;
+    --punchers:    #C92F2F;
+    --warriors:    #1E5FD6;
+    --accent:      #00C875;
+    --ok:          #1D8A4E;
+    --warn:        #B7791F;
+    --risk:        #C92F2F;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 28px 24px 48px; }
+
+  .label {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+  .num { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ---------- HEADER ---------- */
+  .brand { font-variant: small-caps; letter-spacing: 0.14em; color: var(--ink-muted);
+           font-size: 0.8rem; font-weight: 600; }
+  header.page h1 { font-size: 2rem; font-weight: 700; color: var(--ink); margin-top: 6px; }
+  header.page .subtitle { color: var(--ink-soft); font-size: 1rem; margin-top: 4px; }
+  header.page .standfirst { color: var(--ink-soft); font-size: 0.88rem; margin-top: 10px;
+                            max-width: 70ch; }
+  header.page hr { border: none; border-top: 1px solid var(--border); margin: 20px 0 32px; }
+
+  section { margin-bottom: 52px; }
+  .section-label {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.78rem;
+    color: var(--ink-muted); font-weight: 700;
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 22px;
+  }
+
+  /* ---------- SECTION 1A: ARCHETYPE CARDS ---------- */
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 26px; }
+  .arch-card { padding: 20px 22px; border-top: 4px solid; position: relative; }
+  .arch-card h3 { font-size: 1.1rem; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: 0.05em; }
+  .arch-card .tagline { font-style: italic; color: var(--ink-soft); font-size: 0.92rem;
+                        margin: 2px 0 14px; }
+  .arch-card .pill-row { margin-bottom: 12px; }
+  .arch-card .pill-row:last-of-type { margin-bottom: 0; }
+  .arch-card .pill-row .label { display: block; margin-bottom: 5px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    padding: 3px 10px; font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap;
+  }
+  .count-badge {
+    position: absolute; top: 18px; right: 20px;
+    font-size: 0.78rem; font-weight: 700; color: var(--ink-soft);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 999px; padding: 4px 12px; text-decoration: none;
+  }
+  .count-badge:hover { color: var(--ink); }
+
+  /* ---------- SECTION 1B: INSIGHT CARDS ---------- */
+  .insight-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .insight { padding: 18px 20px; }
+  .insight h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; }
+  .insight p { font-size: 0.86rem; color: var(--ink-soft); }
+  .deming { text-align: center; font-style: italic; color: var(--ink-soft);
+            font-size: 1.35rem; font-weight: 600; margin-top: 28px;
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            padding: 26px 12px; }
+  .deming .attr { font-style: normal; font-weight: 400; font-size: 0.8rem;
+                  color: var(--ink-muted); display: block; margin-top: 10px; }
+  .sources { text-align: center; font-size: 0.78rem; color: var(--ink-muted); margin-top: 14px; }
+
+  /* ---------- SECTION 2: GROUPS ---------- */
+  .groups { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .group { overflow: hidden; }
+  .group .ghead { background: var(--ink); color: #fff; font-weight: 700;
+                  font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+                  padding: 8px 14px; }
+  .group .gdates { font-size: 0.72rem; color: var(--ink-muted); padding: 6px 14px;
+                   border-bottom: 1px solid var(--border); background: var(--surface); }
+  .group ul { list-style: none; }
+  .group li { display: flex; align-items: center; gap: 6px; padding: 9px 10px;
+              border-top: 1px solid var(--border); font-size: 0.88rem; }
+  .group li:first-child { border-top: none; }
+  .group li:nth-child(odd) { background: var(--surface); }
+  .group li:nth-child(even) { background: var(--card); }
+  .group .flag { font-size: 1.4rem; flex: none; line-height: 1; }
+  .group .tname { flex: 1; min-width: 0; font-size: 0.86rem; line-height: 1.3; }
+  .arch-pill {
+    color: #fff; border-radius: 999px; padding: 2px 6px; flex: none;
+    width: 96px;
+    font-size: 0.58rem; font-weight: 700; letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: normal;
+    text-align: center; line-height: 1.25;
+  }
+  .group .r32 { flex: none; min-width: 40px; font-size: 0.82rem; }
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 16px;
+            font-size: 0.8rem; color: var(--ink-soft); align-items: center; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+  .legend .sep { color: var(--ink-muted); }
+
+  /* ---------- SECTION 4: GROUP FIXTURES (tabbed) ---------- */
+  .tabbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .tab {
+    border: 1px solid var(--border); border-radius: 8px; background: var(--card);
+    color: var(--ink-soft); font-weight: 700; font-size: 0.85rem;
+    padding: 7px 16px; cursor: pointer; font-family: inherit;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .fixture-list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .fixture-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: var(--shadow); border-left: 4px solid var(--border);
+    padding: 14px 16px;
+  }
+  .fxc-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+              margin-bottom: 10px; }
+  .md-badge { background: var(--surface); border: 1px solid var(--border);
+              border-radius: 4px; font-size: 0.68rem; font-weight: 700;
+              letter-spacing: 0.06em; padding: 2px 7px; color: var(--ink-soft); }
+  .fxc-meta { font-size: 0.76rem; color: var(--ink-muted); }
+  .fxc-times { margin-left: auto; text-align: right; display: flex;
+               flex-direction: column; line-height: 1.35; }
+  .fxc-local { font-weight: 700; font-size: 0.85rem; color: var(--ink); }
+  .fxc-bstref { font-size: 0.7rem; color: var(--ink-muted); }
+  .fx-subtitle { font-size: 0.78rem; color: var(--ink-muted); margin: -14px 0 18px; }
+  .fxc-main { display: flex; align-items: center; gap: 8px; }
+  .fxc-team { flex: 1; display: flex; align-items: center; gap: 7px; min-width: 0;
+              font-size: 0.92rem; font-weight: 600; }
+  .fxc-team.right { flex-direction: row-reverse; text-align: right; }
+  .fxc-team .flag { font-size: 1.35rem; flex: none; line-height: 1; }
+  .fxc-team .arch-pill { width: auto; max-width: 96px; }
+  .fxc-vs { color: var(--ink-muted); font-weight: 700; font-size: 0.72rem; flex: none; }
+  .fxc-foot { display: flex; justify-content: space-between; gap: 12px;
+              align-items: baseline; margin-top: 10px;
+              border-top: 1px solid var(--border); padding-top: 8px; }
+  .fxc-narrative { font-size: 0.78rem; color: var(--ink-soft); font-style: italic; }
+  .fxc-probs { font-size: 0.8rem; font-weight: 600; white-space: nowrap; }
+
+  /* ---------- SECTION 3: MATCHUP EXPLORER ---------- */
+  .selectors { display: flex; gap: 16px; align-items: center; margin-bottom: 22px; }
+  .selectors select {
+    flex: 1; padding: 10px 12px; font-size: 0.95rem; color: var(--ink);
+    border: 1px solid var(--border); border-radius: 8px; background: var(--card);
+    box-shadow: var(--shadow); font-family: inherit;
+  }
+  .selectors .vs { font-weight: 700; color: var(--ink-muted); font-size: 0.85rem; }
+
+  .profiles { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+  .profile { padding: 20px 22px; border-top: 4px solid var(--border); }
+  .profile .phead { display: flex; align-items: center; gap: 12px; margin-bottom: 2px; }
+  .profile .pflag { font-size: 2rem; line-height: 1; }
+  .profile h3 { font-size: 1.4rem; font-weight: 700; }
+  .profile .parch { text-transform: uppercase; font-weight: 700; font-size: 0.82rem;
+                    letter-spacing: 0.08em; margin-bottom: 8px; }
+  .profile .pdef { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 10px; }
+  .profile .pdesc { font-size: 0.8rem; color: var(--ink-soft); background: var(--surface);
+                    border: 1px solid var(--border); border-radius: 6px;
+                    padding: 8px 12px; margin-bottom: 14px; }
+  .profile table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .profile td { padding: 6px 4px; border-top: 1px solid var(--border); }
+  .profile tr:nth-child(odd) td { background: var(--surface); }
+  .profile td:first-child { color: var(--ink-muted); text-transform: uppercase;
+                            letter-spacing: 0.06em; font-size: 0.72rem; }
+  .profile td:last-child { text-align: right; font-weight: 600; }
+
+  .radar-card { padding: 20px 22px; margin-bottom: 18px; text-align: center; }
+  .radar-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+                   color: var(--ink-muted); font-weight: 700; margin-bottom: 10px; }
+  .radar-card svg { max-width: 560px; width: 100%; height: auto; }
+  .radar-legend { display: flex; justify-content: center; gap: 26px; margin-top: 8px;
+                  font-size: 0.85rem; color: var(--ink-soft); }
+  .radar-legend span { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+  .radar-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .matchup-card { padding: 20px 24px; border-left: 4px solid var(--border); margin-bottom: 18px; }
+  .matchup-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+                     color: var(--ink-muted); font-weight: 700; margin-bottom: 8px; }
+  .matchup-card .pairing { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+  .matchup-card .narrative { font-size: 0.92rem; color: var(--ink-soft); }
+
+  .winner-card { padding: 20px 24px; }
+  .winner-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.1em;
+                    color: var(--ink-muted); font-weight: 700; }
+  .winner-card .subnote { font-size: 0.74rem; color: var(--ink-muted); font-style: italic;
+                          margin-bottom: 14px; }
+  .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 14px; }
+  .calc { background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+          padding: 14px 16px; }
+  .calc h5 { font-size: 0.9rem; font-weight: 700; margin-bottom: 8px; }
+  .calc table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .calc td { padding: 4px 2px; }
+  .calc td:first-child { color: var(--ink-soft); }
+  .calc td:last-child { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .calc tr.total td { border-top: 2px solid var(--border); font-weight: 700;
+                      padding-top: 7px; font-size: 0.9rem; }
+  .verdict { font-size: 1.1rem; font-weight: 700; text-align: center; padding: 10px;
+             border-radius: 8px; background: var(--surface); border: 1px solid var(--border); }
+  .disclaimer { font-style: italic; font-size: 0.76rem; color: var(--ink-muted); margin-top: 14px; }
+
+  .placeholder { color: var(--ink-muted); font-style: italic; font-size: 0.9rem; }
+
+  footer { border-top: 1px solid var(--border); padding-top: 18px; text-align: center;
+           color: var(--ink-muted); font-size: 0.8rem; line-height: 1.8; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1024px) {
+    .groups { grid-template-columns: repeat(2, 1fr); }
+    .insight-grid, .fixture-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .groups, .arch-grid, .profiles, .calc-grid { grid-template-columns: 1fr; }
+    .selectors { flex-direction: column; }
+    .selectors select { width: 100%; }
+    .count-badge { position: static; display: inline-block; margin-top: 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+  <div class="brand">infometrix</div>
+  <h1>WC2026 — The Archetype Framework</h1>
+  <p class="subtitle">48 teams. Four playing identities. One tournament. Archetype logic over budget.</p>
+  <p class="standfirst">Built like a model, not a pundit's list: 48 teams classified from
+  qualifying statistics, tactical analysis, and 1,245 verified player records — every
+  classification traced to data, every uncertainty flagged.</p>
+  <hr>
+</header>
+
+<!-- ============ SECTION 1 — THE FRAMEWORK ============ -->
+<section id="framework">
+  <div class="section-label">Section 1 — The Framework</div>
+
+  <div class="arch-grid" id="archCards"></div>
+
+  <div class="insight-grid">
+    <div class="card insight">
+      <h4>Why archetypes beat budgets</h4>
+      <p>Squad market value tells you who should win on paper. It doesn't tell you how a
+      team actually plays, or what happens when two playing identities collide. A modest
+      Counter Kings side drawn against a high-line Maestros giant is worth far more than
+      its ranking suggests — the archetype clash is the signal the market isn't pricing.</p>
+    </div>
+    <div class="card insight">
+      <h4>The Moneyball anchor</h4>
+      <p>Moneyball's lesson was never that statistics win games. It was that markets
+      misprice what they don't measure. We classified all 48 teams using FBref qualifying
+      stats, The Athletic tactical analysis, and squad data. Four archetypes that explain
+      stylistic fit better than FIFA rankings or transfer budgets.</p>
+    </div>
+    <div class="card insight">
+      <h4>Survivorship bias, inverted</h4>
+      <p>Most previews price teams on how strong they looked getting here.
+      Tournament history keeps rewarding something else — clear identity,
+      organisation, and a transition threat outlast more talented squads.
+      The framework is built to spot that profile before the market does.</p>
+    </div>
+  </div>
+
+  <p class="deming">&ldquo;In God we trust; all others must bring data.&rdquo;
+    <span class="attr">— attributed to W. Edwards Deming</span>
+  </p>
+  <p class="sources">Tactical analysis &middot; Tournament forecasts: The Athletic &middot;
+    Qualifying stats: FBref &middot; Squad data: 1,245 players &middot; 48 nations</p>
+</section>
+
+<!-- ============ SECTION 2 — GROUP STAGE ============ -->
+<section id="groupstage">
+  <div class="section-label">Section 2 — Group Stage</div>
+  <div class="legend" id="legend"></div>
+  <div class="groups" id="groups"></div>
+</section>
+
+<!-- ============ SECTION 4 — GROUP FIXTURES ============ -->
+<section id="groupfixtures">
+  <div class="section-label">Section 3 — Group Fixtures</div>
+  <p class="fx-subtitle" id="fxSubtitle">Times shown in your local timezone &middot; BST shown for reference &middot; Source: Wikipedia / FIFA match schedule</p>
+  <div class="tabbar" id="fxTabs" role="tablist"></div>
+  <div class="fixture-list" id="fxList"></div>
+</section>
+
+<!-- ============ SECTION 3 — MATCHUP EXPLORER ============ -->
+<section id="explorer">
+  <div class="section-label">Section 4 — Matchup Explorer</div>
+
+  <div class="card winner-card" id="winnerCard">
+    <h4>Predicted Winner</h4>
+    <p class="subnote">Illustration model only</p>
+    <p class="placeholder">Pick two teams to run the prediction.</p>
+  </div>
+
+  <div class="selectors">
+    <select id="teamA" aria-label="Select team A"></select>
+    <span class="vs">VS</span>
+    <select id="teamB" aria-label="Select team B"></select>
+  </div>
+
+  <div class="profiles">
+    <div class="card profile" id="profileA"><p class="placeholder">Select a team above.</p></div>
+    <div class="card profile" id="profileB"><p class="placeholder">Select a team above.</p></div>
+  </div>
+
+  <div class="card radar-card" id="radarCard">
+    <h4>Tournament probability profile (The Athletic)</h4>
+    <p class="placeholder">Pick two teams to compare their tournament runs.</p>
+  </div>
+
+  <div class="card matchup-card" id="matchupCard">
+    <h4>Archetype vs Archetype</h4>
+    <p class="placeholder">Pick two teams to see how their playing identities collide.</p>
+  </div>
+
+</section>
+
+<footer>
+  Infometrix &middot; WC2026 &middot; Pedro Morcillo<br>
+  Archetype framework &middot; FBref &middot; The Athletic probabilities
+</footer>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============ DATA (exported from wc2026.db at build time) ============ */
+const TEAMS = [
+ {
+  "name": "Czech Republic",
+  "fifa": "CZE",
+  "iso": "CZ",
+  "conf": "UEFA",
+  "group": "A",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 68.7,
+  "avgAge": 27.58,
+  "r32": 71.0,
+  "r16": 32.0,
+  "qf": 11.0,
+  "sf": 3.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Mexico",
+  "fifa": "MEX",
+  "iso": "MX",
+  "conf": "CONCACAF",
+  "group": "A",
+  "archetype": "Counter Kings",
+  "confidence": "expert",
+  "gsProb": 95.6,
+  "avgAge": 27.92,
+  "r32": 90.0,
+  "r16": 51.0,
+  "qf": 20.0,
+  "sf": 6.0,
+  "fin": 2.0,
+  "win": 1.0
+ },
+ {
+  "name": "South Africa",
+  "fifa": "RSA",
+  "iso": "ZA",
+  "conf": "CAF",
+  "group": "A",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 31.8,
+  "avgAge": 26.81,
+  "r32": 38.0,
+  "r16": 11.0,
+  "qf": 2.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "South Korea",
+  "fifa": "KOR",
+  "iso": "KR",
+  "conf": "AFC",
+  "group": "A",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 71.2,
+  "avgAge": 28.15,
+  "r32": 73.0,
+  "r16": 34.0,
+  "qf": 12.0,
+  "sf": 3.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Bosnia and Herzegovina",
+  "fifa": "BIH",
+  "iso": "BA",
+  "conf": "UEFA",
+  "group": "B",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 63.2,
+  "avgAge": 26.42,
+  "r32": 71.0,
+  "r16": 30.0,
+  "qf": 9.0,
+  "sf": 2.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Canada",
+  "fifa": "CAN",
+  "iso": "CA",
+  "conf": "CONCACAF",
+  "group": "B",
+  "archetype": "Counter Kings",
+  "confidence": "expert",
+  "gsProb": 90.7,
+  "avgAge": 27.0,
+  "r32": 90.0,
+  "r16": 49.0,
+  "qf": 18.0,
+  "sf": 5.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Qatar",
+  "fifa": "QAT",
+  "iso": "QA",
+  "conf": "AFC",
+  "group": "B",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 27.5,
+  "avgAge": 29.88,
+  "r32": 25.0,
+  "r16": 5.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Switzerland",
+  "fifa": "SUI",
+  "iso": "CH",
+  "conf": "UEFA",
+  "group": "B",
+  "archetype": "Controllers",
+  "confidence": "data",
+  "gsProb": 88.9,
+  "avgAge": 28.38,
+  "r32": 87.0,
+  "r16": 48.0,
+  "qf": 19.0,
+  "sf": 6.0,
+  "fin": 2.0,
+  "win": 0.0
+ },
+ {
+  "name": "Brazil",
+  "fifa": "BRA",
+  "iso": "BR",
+  "conf": "CONMEBOL",
+  "group": "C",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 96.1,
+  "avgAge": 29.27,
+  "r32": 95.0,
+  "r16": 63.0,
+  "qf": 39.0,
+  "sf": 21.0,
+  "fin": 11.0,
+  "win": 5.0
+ },
+ {
+  "name": "Haiti",
+  "fifa": "HAI",
+  "iso": "HT",
+  "conf": "CONCACAF",
+  "group": "C",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 29.4,
+  "avgAge": 27.58,
+  "r32": 27.0,
+  "r16": 6.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Morocco",
+  "fifa": "MAR",
+  "iso": "MA",
+  "conf": "CAF",
+  "group": "C",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 76.1,
+  "avgAge": 26.5,
+  "r32": 77.0,
+  "r16": 35.0,
+  "qf": 15.0,
+  "sf": 5.0,
+  "fin": 2.0,
+  "win": 0.0
+ },
+ {
+  "name": "Scotland",
+  "fifa": "SCO",
+  "iso": "GB-SCT",
+  "conf": "UEFA",
+  "group": "C",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 64.3,
+  "avgAge": 29.31,
+  "r32": 70.0,
+  "r16": 28.0,
+  "qf": 11.0,
+  "sf": 4.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Australia",
+  "fifa": "AUS",
+  "iso": "AU",
+  "conf": "AFC",
+  "group": "D",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 59.4,
+  "avgAge": 27.42,
+  "r32": 44.0,
+  "r16": 15.0,
+  "qf": 4.0,
+  "sf": 1.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Paraguay",
+  "fifa": "PAR",
+  "iso": "PY",
+  "conf": "CONMEBOL",
+  "group": "D",
+  "archetype": "Warriors",
+  "confidence": "mixed",
+  "gsProb": 67.0,
+  "avgAge": 29.0,
+  "r32": 63.0,
+  "r16": 28.0,
+  "qf": 9.0,
+  "sf": 3.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Turkey",
+  "fifa": "TUR",
+  "iso": "TR",
+  "conf": "UEFA",
+  "group": "D",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 77.3,
+  "avgAge": 27.65,
+  "r32": 82.0,
+  "r16": 48.0,
+  "qf": 21.0,
+  "sf": 8.0,
+  "fin": 3.0,
+  "win": 1.0
+ },
+ {
+  "name": "United States",
+  "fifa": "USA",
+  "iso": "US",
+  "conf": "CONCACAF",
+  "group": "D",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 69.5,
+  "avgAge": 26.92,
+  "r32": 85.0,
+  "r16": 52.0,
+  "qf": 23.0,
+  "sf": 9.0,
+  "fin": 4.0,
+  "win": 1.0
+ },
+ {
+  "name": "Curacao",
+  "fifa": "CUW",
+  "iso": "CW",
+  "conf": "CONCACAF",
+  "group": "E",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 31.5,
+  "avgAge": 28.12,
+  "r32": 22.0,
+  "r16": 4.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Ecuador",
+  "fifa": "ECU",
+  "iso": "EC",
+  "conf": "CONMEBOL",
+  "group": "E",
+  "archetype": "Controllers",
+  "confidence": "data",
+  "gsProb": 84.6,
+  "avgAge": 26.08,
+  "r32": 73.0,
+  "r16": 30.0,
+  "qf": 10.0,
+  "sf": 4.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Germany",
+  "fifa": "GER",
+  "iso": "DE",
+  "conf": "UEFA",
+  "group": "E",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 95.0,
+  "avgAge": 27.92,
+  "r32": 95.0,
+  "r16": 63.0,
+  "qf": 31.0,
+  "sf": 19.0,
+  "fin": 9.0,
+  "win": 4.0
+ },
+ {
+  "name": "Ivory Coast",
+  "fifa": "CIV",
+  "iso": "CI",
+  "conf": "CAF",
+  "group": "E",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 54.8,
+  "avgAge": 25.92,
+  "r32": 81.0,
+  "r16": 38.0,
+  "qf": 14.0,
+  "sf": 6.0,
+  "fin": 2.0,
+  "win": 1.0
+ },
+ {
+  "name": "Japan",
+  "fifa": "JPN",
+  "iso": "JP",
+  "conf": "AFC",
+  "group": "F",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 78.9,
+  "avgAge": 27.81,
+  "r32": 81.0,
+  "r16": 36.0,
+  "qf": 18.0,
+  "sf": 7.0,
+  "fin": 2.0,
+  "win": 1.0
+ },
+ {
+  "name": "Netherlands",
+  "fifa": "NED",
+  "iso": "NL",
+  "conf": "UEFA",
+  "group": "F",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 94.3,
+  "avgAge": 27.69,
+  "r32": 92.0,
+  "r16": 54.0,
+  "qf": 36.0,
+  "sf": 17.0,
+  "fin": 8.0,
+  "win": 3.0
+ },
+ {
+  "name": "Sweden",
+  "fifa": "SWE",
+  "iso": "SE",
+  "conf": "UEFA",
+  "group": "F",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 54.2,
+  "avgAge": 27.46,
+  "r32": 61.0,
+  "r16": 18.0,
+  "qf": 7.0,
+  "sf": 2.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Tunisia",
+  "fifa": "TUN",
+  "iso": "TN",
+  "conf": "CAF",
+  "group": "F",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 39.0,
+  "avgAge": 26.65,
+  "r32": 36.0,
+  "r16": 7.0,
+  "qf": 2.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Belgium",
+  "fifa": "BEL",
+  "iso": "BE",
+  "conf": "UEFA",
+  "group": "G",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 86.3,
+  "avgAge": 27.65,
+  "r32": 97.0,
+  "r16": 70.0,
+  "qf": 44.0,
+  "sf": 20.0,
+  "fin": 10.0,
+  "win": 4.0
+ },
+ {
+  "name": "Egypt",
+  "fifa": "EGY",
+  "iso": "EG",
+  "conf": "CAF",
+  "group": "G",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 60.7,
+  "avgAge": 28.92,
+  "r32": 69.0,
+  "r16": 28.0,
+  "qf": 8.0,
+  "sf": 2.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Iran",
+  "fifa": "IRN",
+  "iso": "IR",
+  "conf": "AFC",
+  "group": "G",
+  "archetype": "Warriors",
+  "confidence": "mixed",
+  "gsProb": 71.6,
+  "avgAge": 30.46,
+  "r32": 56.0,
+  "r16": 18.0,
+  "qf": 4.0,
+  "sf": 1.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "New Zealand",
+  "fifa": "NZL",
+  "iso": "NZ",
+  "conf": "OFC",
+  "group": "G",
+  "archetype": "Warriors",
+  "confidence": "mixed",
+  "gsProb": 52.9,
+  "avgAge": 28.12,
+  "r32": 44.0,
+  "r16": 13.0,
+  "qf": 2.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Cape Verde",
+  "fifa": "CPV",
+  "iso": "CV",
+  "conf": "CAF",
+  "group": "H",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 42.2,
+  "avgAge": 29.81,
+  "r32": 33.0,
+  "r16": 7.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Saudi Arabia",
+  "fifa": "KSA",
+  "iso": "SA",
+  "conf": "AFC",
+  "group": "H",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 35.0,
+  "avgAge": 28.65,
+  "r32": 29.0,
+  "r16": 6.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Spain",
+  "fifa": "ESP",
+  "iso": "ES",
+  "conf": "UEFA",
+  "group": "H",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 99.1,
+  "avgAge": 26.73,
+  "r32": 99.0,
+  "r16": 77.0,
+  "qf": 58.0,
+  "sf": 45.0,
+  "fin": 30.0,
+  "win": 19.0
+ },
+ {
+  "name": "Uruguay",
+  "fifa": "URU",
+  "iso": "UY",
+  "conf": "CONMEBOL",
+  "group": "H",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 79.9,
+  "avgAge": 28.81,
+  "r32": 87.0,
+  "r16": 38.0,
+  "qf": 20.0,
+  "sf": 9.0,
+  "fin": 3.0,
+  "win": 1.0
+ },
+ {
+  "name": "France",
+  "fifa": "FRA",
+  "iso": "FR",
+  "conf": "UEFA",
+  "group": "I",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 96.2,
+  "avgAge": 27.04,
+  "r32": 98.0,
+  "r16": 82.0,
+  "qf": 63.0,
+  "sf": 48.0,
+  "fin": 32.0,
+  "win": 21.0
+ },
+ {
+  "name": "Iraq",
+  "fifa": "IRQ",
+  "iso": "IQ",
+  "conf": "AFC",
+  "group": "I",
+  "archetype": "Warriors",
+  "confidence": "mixed",
+  "gsProb": 22.0,
+  "avgAge": 27.27,
+  "r32": 14.0,
+  "r16": 3.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Norway",
+  "fifa": "NOR",
+  "iso": "NO",
+  "conf": "UEFA",
+  "group": "I",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 78.0,
+  "avgAge": 26.88,
+  "r32": 78.0,
+  "r16": 43.0,
+  "qf": 22.0,
+  "sf": 10.0,
+  "fin": 4.0,
+  "win": 1.0
+ },
+ {
+  "name": "Senegal",
+  "fifa": "SEN",
+  "iso": "SN",
+  "conf": "CAF",
+  "group": "I",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 70.4,
+  "avgAge": 27.04,
+  "r32": 77.0,
+  "r16": 41.0,
+  "qf": 21.0,
+  "sf": 10.0,
+  "fin": 4.0,
+  "win": 1.0
+ },
+ {
+  "name": "Algeria",
+  "fifa": "ALG",
+  "iso": "DZ",
+  "conf": "CAF",
+  "group": "J",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 50.3,
+  "avgAge": 26.78,
+  "r32": 67.0,
+  "r16": 21.0,
+  "qf": 8.0,
+  "sf": 3.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Argentina",
+  "fifa": "ARG",
+  "iso": "AR",
+  "conf": "CONMEBOL",
+  "group": "J",
+  "archetype": "Maestros",
+  "confidence": "data",
+  "gsProb": 96.5,
+  "avgAge": 29.04,
+  "r32": 98.0,
+  "r16": 64.0,
+  "qf": 48.0,
+  "sf": 31.0,
+  "fin": 18.0,
+  "win": 10.0
+ },
+ {
+  "name": "Austria",
+  "fifa": "AUT",
+  "iso": "AT",
+  "conf": "UEFA",
+  "group": "J",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 69.4,
+  "avgAge": 28.56,
+  "r32": 76.0,
+  "r16": 27.0,
+  "qf": 12.0,
+  "sf": 5.0,
+  "fin": 1.0,
+  "win": 0.0
+ },
+ {
+  "name": "Jordan",
+  "fifa": "JOR",
+  "iso": "JO",
+  "conf": "AFC",
+  "group": "J",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 47.9,
+  "avgAge": 28.31,
+  "r32": 25.0,
+  "r16": 5.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Colombia",
+  "fifa": "COL",
+  "iso": "CO",
+  "conf": "CONMEBOL",
+  "group": "K",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 87.4,
+  "avgAge": 30.12,
+  "r32": 85.0,
+  "r16": 45.0,
+  "qf": 22.0,
+  "sf": 10.0,
+  "fin": 4.0,
+  "win": 1.0
+ },
+ {
+  "name": "DR Congo",
+  "fifa": "COD",
+  "iso": "CD",
+  "conf": "CAF",
+  "group": "K",
+  "archetype": "Warriors",
+  "confidence": "data",
+  "gsProb": 34.9,
+  "avgAge": 29.15,
+  "r32": 48.0,
+  "r16": 13.0,
+  "qf": 4.0,
+  "sf": 1.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Portugal",
+  "fifa": "POR",
+  "iso": "PT",
+  "conf": "UEFA",
+  "group": "K",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 90.2,
+  "avgAge": 28.12,
+  "r32": 96.0,
+  "r16": 68.0,
+  "qf": 47.0,
+  "sf": 29.0,
+  "fin": 17.0,
+  "win": 9.0
+ },
+ {
+  "name": "Uzbekistan",
+  "fifa": "UZB",
+  "iso": "UZ",
+  "conf": "AFC",
+  "group": "K",
+  "archetype": "Controllers",
+  "confidence": "data",
+  "gsProb": 54.5,
+  "avgAge": 28.5,
+  "r32": 34.0,
+  "r16": 8.0,
+  "qf": 2.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Croatia",
+  "fifa": "CRO",
+  "iso": "HR",
+  "conf": "UEFA",
+  "group": "L",
+  "archetype": "Controllers",
+  "confidence": "mixed",
+  "gsProb": 87.4,
+  "avgAge": 28.23,
+  "r32": 85.0,
+  "r16": 44.0,
+  "qf": 20.0,
+  "sf": 9.0,
+  "fin": 4.0,
+  "win": 1.0
+ },
+ {
+  "name": "England",
+  "fifa": "ENG",
+  "iso": "GB-ENG",
+  "conf": "UEFA",
+  "group": "L",
+  "archetype": "Maestros",
+  "confidence": "mixed",
+  "gsProb": 94.1,
+  "avgAge": 27.19,
+  "r32": 97.0,
+  "r16": 72.0,
+  "qf": 51.0,
+  "sf": 33.0,
+  "fin": 20.0,
+  "win": 11.0
+ },
+ {
+  "name": "Ghana",
+  "fifa": "GHA",
+  "iso": "GH",
+  "conf": "CAF",
+  "group": "L",
+  "archetype": "Counter Kings",
+  "confidence": "data",
+  "gsProb": 26.4,
+  "avgAge": 27.08,
+  "r32": 51.0,
+  "r16": 15.0,
+  "qf": 5.0,
+  "sf": 1.0,
+  "fin": 0.0,
+  "win": 0.0
+ },
+ {
+  "name": "Panama",
+  "fifa": "PAN",
+  "iso": "PA",
+  "conf": "CONCACAF",
+  "group": "L",
+  "archetype": "Counter Kings",
+  "confidence": "mixed",
+  "gsProb": 58.0,
+  "avgAge": 30.38,
+  "r32": 28.0,
+  "r16": 6.0,
+  "qf": 1.0,
+  "sf": 0.0,
+  "fin": 0.0,
+  "win": 0.0
+ }
+];
+const DEFINITIONS = {
+ "Maestros": "Structured, possession-dominant sides that build methodically from the back and win by controlling the game and overwhelming opponents with technical quality in the final third.",
+ "Controllers": "Structured but defence-first sides that prioritise organisation and game-management, winning through control and low risk — starving opponents of chances rather than out-scoring them.",
+ "Counter Kings": "Transition-focused, attack-minded sides that cede possession, win the ball and strike fast, beating opponents with pace and directness on the break.",
+ "Warriors": "Transition-based, defence-first underdogs that win through work-rate, organisation and resilience — frustrating better teams and punishing them on the counter."
+};
+const FIXTURES = [
+ {
+  "match": 1,
+  "group": "A",
+  "matchday": 1,
+  "utc": "2026-06-11T19:00:00Z",
+  "city": "Mexico City",
+  "teamA": "Mexico",
+  "teamB": "South Africa"
+ },
+ {
+  "match": 2,
+  "group": "A",
+  "matchday": 1,
+  "utc": "2026-06-12T02:00:00Z",
+  "city": "Guadalajara",
+  "teamA": "South Korea",
+  "teamB": "Czech Republic"
+ },
+ {
+  "match": 3,
+  "group": "A",
+  "matchday": 2,
+  "utc": "2026-06-18T16:00:00Z",
+  "city": "Atlanta",
+  "teamA": "Czech Republic",
+  "teamB": "South Africa"
+ },
+ {
+  "match": 4,
+  "group": "A",
+  "matchday": 2,
+  "utc": "2026-06-19T01:00:00Z",
+  "city": "Guadalajara",
+  "teamA": "Mexico",
+  "teamB": "South Korea"
+ },
+ {
+  "match": 5,
+  "group": "A",
+  "matchday": 3,
+  "utc": "2026-06-25T01:00:00Z",
+  "city": "Mexico City",
+  "teamA": "Czech Republic",
+  "teamB": "Mexico"
+ },
+ {
+  "match": 6,
+  "group": "A",
+  "matchday": 3,
+  "utc": "2026-06-25T01:00:00Z",
+  "city": "Monterrey",
+  "teamA": "South Africa",
+  "teamB": "South Korea"
+ },
+ {
+  "match": 7,
+  "group": "B",
+  "matchday": 1,
+  "utc": "2026-06-12T19:00:00Z",
+  "city": "Toronto",
+  "teamA": "Canada",
+  "teamB": "Bosnia and Herzegovina"
+ },
+ {
+  "match": 8,
+  "group": "B",
+  "matchday": 1,
+  "utc": "2026-06-13T19:00:00Z",
+  "city": "Santa Clara",
+  "teamA": "Qatar",
+  "teamB": "Switzerland"
+ },
+ {
+  "match": 9,
+  "group": "B",
+  "matchday": 2,
+  "utc": "2026-06-18T19:00:00Z",
+  "city": "Los Angeles",
+  "teamA": "Switzerland",
+  "teamB": "Bosnia and Herzegovina"
+ },
+ {
+  "match": 10,
+  "group": "B",
+  "matchday": 2,
+  "utc": "2026-06-18T22:00:00Z",
+  "city": "Vancouver",
+  "teamA": "Canada",
+  "teamB": "Qatar"
+ },
+ {
+  "match": 11,
+  "group": "B",
+  "matchday": 3,
+  "utc": "2026-06-24T19:00:00Z",
+  "city": "Vancouver",
+  "teamA": "Switzerland",
+  "teamB": "Canada"
+ },
+ {
+  "match": 12,
+  "group": "B",
+  "matchday": 3,
+  "utc": "2026-06-24T19:00:00Z",
+  "city": "Seattle",
+  "teamA": "Bosnia and Herzegovina",
+  "teamB": "Qatar"
+ },
+ {
+  "match": 13,
+  "group": "C",
+  "matchday": 1,
+  "utc": "2026-06-13T22:00:00Z",
+  "city": "East Rutherford",
+  "teamA": "Brazil",
+  "teamB": "Morocco"
+ },
+ {
+  "match": 14,
+  "group": "C",
+  "matchday": 1,
+  "utc": "2026-06-14T01:00:00Z",
+  "city": "Boston",
+  "teamA": "Haiti",
+  "teamB": "Scotland"
+ },
+ {
+  "match": 15,
+  "group": "C",
+  "matchday": 2,
+  "utc": "2026-06-19T22:00:00Z",
+  "city": "Boston",
+  "teamA": "Scotland",
+  "teamB": "Morocco"
+ },
+ {
+  "match": 16,
+  "group": "C",
+  "matchday": 2,
+  "utc": "2026-06-20T00:30:00Z",
+  "city": "Philadelphia",
+  "teamA": "Brazil",
+  "teamB": "Haiti"
+ },
+ {
+  "match": 17,
+  "group": "C",
+  "matchday": 3,
+  "utc": "2026-06-24T22:00:00Z",
+  "city": "Miami",
+  "teamA": "Scotland",
+  "teamB": "Brazil"
+ },
+ {
+  "match": 18,
+  "group": "C",
+  "matchday": 3,
+  "utc": "2026-06-24T22:00:00Z",
+  "city": "Atlanta",
+  "teamA": "Morocco",
+  "teamB": "Haiti"
+ },
+ {
+  "match": 19,
+  "group": "D",
+  "matchday": 1,
+  "utc": "2026-06-13T01:00:00Z",
+  "city": "Los Angeles",
+  "teamA": "United States",
+  "teamB": "Paraguay"
+ },
+ {
+  "match": 20,
+  "group": "D",
+  "matchday": 1,
+  "utc": "2026-06-14T04:00:00Z",
+  "city": "Vancouver",
+  "teamA": "Australia",
+  "teamB": "Turkey"
+ },
+ {
+  "match": 21,
+  "group": "D",
+  "matchday": 2,
+  "utc": "2026-06-19T19:00:00Z",
+  "city": "Seattle",
+  "teamA": "United States",
+  "teamB": "Australia"
+ },
+ {
+  "match": 22,
+  "group": "D",
+  "matchday": 2,
+  "utc": "2026-06-20T03:00:00Z",
+  "city": "Santa Clara",
+  "teamA": "Turkey",
+  "teamB": "Paraguay"
+ },
+ {
+  "match": 23,
+  "group": "D",
+  "matchday": 3,
+  "utc": "2026-06-26T02:00:00Z",
+  "city": "Los Angeles",
+  "teamA": "Turkey",
+  "teamB": "United States"
+ },
+ {
+  "match": 24,
+  "group": "D",
+  "matchday": 3,
+  "utc": "2026-06-26T02:00:00Z",
+  "city": "Santa Clara",
+  "teamA": "Paraguay",
+  "teamB": "Australia"
+ },
+ {
+  "match": 25,
+  "group": "E",
+  "matchday": 1,
+  "utc": "2026-06-14T17:00:00Z",
+  "city": "Houston",
+  "teamA": "Germany",
+  "teamB": "Curacao"
+ },
+ {
+  "match": 26,
+  "group": "E",
+  "matchday": 1,
+  "utc": "2026-06-14T23:00:00Z",
+  "city": "Philadelphia",
+  "teamA": "Ivory Coast",
+  "teamB": "Ecuador"
+ },
+ {
+  "match": 27,
+  "group": "E",
+  "matchday": 2,
+  "utc": "2026-06-20T20:00:00Z",
+  "city": "Toronto",
+  "teamA": "Germany",
+  "teamB": "Ivory Coast"
+ },
+ {
+  "match": 28,
+  "group": "E",
+  "matchday": 2,
+  "utc": "2026-06-21T00:00:00Z",
+  "city": "Kansas City",
+  "teamA": "Ecuador",
+  "teamB": "Curacao"
+ },
+ {
+  "match": 29,
+  "group": "E",
+  "matchday": 3,
+  "utc": "2026-06-25T20:00:00Z",
+  "city": "Philadelphia",
+  "teamA": "Curacao",
+  "teamB": "Ivory Coast"
+ },
+ {
+  "match": 30,
+  "group": "E",
+  "matchday": 3,
+  "utc": "2026-06-25T20:00:00Z",
+  "city": "East Rutherford",
+  "teamA": "Ecuador",
+  "teamB": "Germany"
+ },
+ {
+  "match": 31,
+  "group": "F",
+  "matchday": 1,
+  "utc": "2026-06-14T20:00:00Z",
+  "city": "Dallas",
+  "teamA": "Netherlands",
+  "teamB": "Japan"
+ },
+ {
+  "match": 32,
+  "group": "F",
+  "matchday": 1,
+  "utc": "2026-06-15T02:00:00Z",
+  "city": "Monterrey",
+  "teamA": "Sweden",
+  "teamB": "Tunisia"
+ },
+ {
+  "match": 33,
+  "group": "F",
+  "matchday": 2,
+  "utc": "2026-06-20T17:00:00Z",
+  "city": "Houston",
+  "teamA": "Netherlands",
+  "teamB": "Sweden"
+ },
+ {
+  "match": 34,
+  "group": "F",
+  "matchday": 2,
+  "utc": "2026-06-21T04:00:00Z",
+  "city": "Monterrey",
+  "teamA": "Tunisia",
+  "teamB": "Japan"
+ },
+ {
+  "match": 35,
+  "group": "F",
+  "matchday": 3,
+  "utc": "2026-06-25T23:00:00Z",
+  "city": "Dallas",
+  "teamA": "Japan",
+  "teamB": "Sweden"
+ },
+ {
+  "match": 36,
+  "group": "F",
+  "matchday": 3,
+  "utc": "2026-06-25T23:00:00Z",
+  "city": "Kansas City",
+  "teamA": "Tunisia",
+  "teamB": "Netherlands"
+ },
+ {
+  "match": 37,
+  "group": "G",
+  "matchday": 1,
+  "utc": "2026-06-15T19:00:00Z",
+  "city": "Seattle",
+  "teamA": "Belgium",
+  "teamB": "Egypt"
+ },
+ {
+  "match": 38,
+  "group": "G",
+  "matchday": 1,
+  "utc": "2026-06-16T01:00:00Z",
+  "city": "Los Angeles",
+  "teamA": "Iran",
+  "teamB": "New Zealand"
+ },
+ {
+  "match": 39,
+  "group": "G",
+  "matchday": 2,
+  "utc": "2026-06-21T19:00:00Z",
+  "city": "Los Angeles",
+  "teamA": "Belgium",
+  "teamB": "Iran"
+ },
+ {
+  "match": 40,
+  "group": "G",
+  "matchday": 2,
+  "utc": "2026-06-22T01:00:00Z",
+  "city": "Vancouver",
+  "teamA": "New Zealand",
+  "teamB": "Egypt"
+ },
+ {
+  "match": 41,
+  "group": "G",
+  "matchday": 3,
+  "utc": "2026-06-27T03:00:00Z",
+  "city": "Seattle",
+  "teamA": "Egypt",
+  "teamB": "Iran"
+ },
+ {
+  "match": 42,
+  "group": "G",
+  "matchday": 3,
+  "utc": "2026-06-27T03:00:00Z",
+  "city": "Vancouver",
+  "teamA": "New Zealand",
+  "teamB": "Belgium"
+ },
+ {
+  "match": 43,
+  "group": "H",
+  "matchday": 1,
+  "utc": "2026-06-15T16:00:00Z",
+  "city": "Atlanta",
+  "teamA": "Spain",
+  "teamB": "Cape Verde"
+ },
+ {
+  "match": 44,
+  "group": "H",
+  "matchday": 1,
+  "utc": "2026-06-15T22:00:00Z",
+  "city": "Miami",
+  "teamA": "Saudi Arabia",
+  "teamB": "Uruguay"
+ },
+ {
+  "match": 45,
+  "group": "H",
+  "matchday": 2,
+  "utc": "2026-06-21T16:00:00Z",
+  "city": "Atlanta",
+  "teamA": "Spain",
+  "teamB": "Saudi Arabia"
+ },
+ {
+  "match": 46,
+  "group": "H",
+  "matchday": 2,
+  "utc": "2026-06-21T22:00:00Z",
+  "city": "Miami",
+  "teamA": "Uruguay",
+  "teamB": "Cape Verde"
+ },
+ {
+  "match": 47,
+  "group": "H",
+  "matchday": 3,
+  "utc": "2026-06-27T00:00:00Z",
+  "city": "Houston",
+  "teamA": "Cape Verde",
+  "teamB": "Saudi Arabia"
+ },
+ {
+  "match": 48,
+  "group": "H",
+  "matchday": 3,
+  "utc": "2026-06-27T00:00:00Z",
+  "city": "Guadalajara",
+  "teamA": "Uruguay",
+  "teamB": "Spain"
+ },
+ {
+  "match": 49,
+  "group": "I",
+  "matchday": 1,
+  "utc": "2026-06-16T19:00:00Z",
+  "city": "East Rutherford",
+  "teamA": "France",
+  "teamB": "Senegal"
+ },
+ {
+  "match": 50,
+  "group": "I",
+  "matchday": 1,
+  "utc": "2026-06-16T22:00:00Z",
+  "city": "Boston",
+  "teamA": "Iraq",
+  "teamB": "Norway"
+ },
+ {
+  "match": 51,
+  "group": "I",
+  "matchday": 2,
+  "utc": "2026-06-22T21:00:00Z",
+  "city": "Philadelphia",
+  "teamA": "France",
+  "teamB": "Iraq"
+ },
+ {
+  "match": 52,
+  "group": "I",
+  "matchday": 2,
+  "utc": "2026-06-23T00:00:00Z",
+  "city": "East Rutherford",
+  "teamA": "Norway",
+  "teamB": "Senegal"
+ },
+ {
+  "match": 53,
+  "group": "I",
+  "matchday": 3,
+  "utc": "2026-06-26T19:00:00Z",
+  "city": "Boston",
+  "teamA": "Norway",
+  "teamB": "France"
+ },
+ {
+  "match": 54,
+  "group": "I",
+  "matchday": 3,
+  "utc": "2026-06-26T19:00:00Z",
+  "city": "Toronto",
+  "teamA": "Senegal",
+  "teamB": "Iraq"
+ },
+ {
+  "match": 55,
+  "group": "J",
+  "matchday": 1,
+  "utc": "2026-06-17T01:00:00Z",
+  "city": "Kansas City",
+  "teamA": "Argentina",
+  "teamB": "Algeria"
+ },
+ {
+  "match": 56,
+  "group": "J",
+  "matchday": 1,
+  "utc": "2026-06-17T04:00:00Z",
+  "city": "Santa Clara",
+  "teamA": "Austria",
+  "teamB": "Jordan"
+ },
+ {
+  "match": 57,
+  "group": "J",
+  "matchday": 2,
+  "utc": "2026-06-22T17:00:00Z",
+  "city": "Dallas",
+  "teamA": "Argentina",
+  "teamB": "Austria"
+ },
+ {
+  "match": 58,
+  "group": "J",
+  "matchday": 2,
+  "utc": "2026-06-23T03:00:00Z",
+  "city": "Santa Clara",
+  "teamA": "Jordan",
+  "teamB": "Algeria"
+ },
+ {
+  "match": 59,
+  "group": "J",
+  "matchday": 3,
+  "utc": "2026-06-28T02:00:00Z",
+  "city": "Kansas City",
+  "teamA": "Algeria",
+  "teamB": "Austria"
+ },
+ {
+  "match": 60,
+  "group": "J",
+  "matchday": 3,
+  "utc": "2026-06-28T02:00:00Z",
+  "city": "Dallas",
+  "teamA": "Jordan",
+  "teamB": "Argentina"
+ },
+ {
+  "match": 61,
+  "group": "K",
+  "matchday": 1,
+  "utc": "2026-06-17T17:00:00Z",
+  "city": "Houston",
+  "teamA": "Portugal",
+  "teamB": "DR Congo"
+ },
+ {
+  "match": 62,
+  "group": "K",
+  "matchday": 1,
+  "utc": "2026-06-18T02:00:00Z",
+  "city": "Mexico City",
+  "teamA": "Uzbekistan",
+  "teamB": "Colombia"
+ },
+ {
+  "match": 63,
+  "group": "K",
+  "matchday": 2,
+  "utc": "2026-06-23T17:00:00Z",
+  "city": "Houston",
+  "teamA": "Portugal",
+  "teamB": "Uzbekistan"
+ },
+ {
+  "match": 64,
+  "group": "K",
+  "matchday": 2,
+  "utc": "2026-06-24T02:00:00Z",
+  "city": "Guadalajara",
+  "teamA": "Colombia",
+  "teamB": "DR Congo"
+ },
+ {
+  "match": 65,
+  "group": "K",
+  "matchday": 3,
+  "utc": "2026-06-27T23:30:00Z",
+  "city": "Miami",
+  "teamA": "Colombia",
+  "teamB": "Portugal"
+ },
+ {
+  "match": 66,
+  "group": "K",
+  "matchday": 3,
+  "utc": "2026-06-27T23:30:00Z",
+  "city": "Atlanta",
+  "teamA": "DR Congo",
+  "teamB": "Uzbekistan"
+ },
+ {
+  "match": 67,
+  "group": "L",
+  "matchday": 1,
+  "utc": "2026-06-17T20:00:00Z",
+  "city": "Dallas",
+  "teamA": "England",
+  "teamB": "Croatia"
+ },
+ {
+  "match": 68,
+  "group": "L",
+  "matchday": 1,
+  "utc": "2026-06-17T23:00:00Z",
+  "city": "Toronto",
+  "teamA": "Ghana",
+  "teamB": "Panama"
+ },
+ {
+  "match": 69,
+  "group": "L",
+  "matchday": 2,
+  "utc": "2026-06-23T20:00:00Z",
+  "city": "Boston",
+  "teamA": "England",
+  "teamB": "Ghana"
+ },
+ {
+  "match": 70,
+  "group": "L",
+  "matchday": 2,
+  "utc": "2026-06-23T23:00:00Z",
+  "city": "Toronto",
+  "teamA": "Panama",
+  "teamB": "Croatia"
+ },
+ {
+  "match": 71,
+  "group": "L",
+  "matchday": 3,
+  "utc": "2026-06-27T21:00:00Z",
+  "city": "East Rutherford",
+  "teamA": "Panama",
+  "teamB": "England"
+ },
+ {
+  "match": 72,
+  "group": "L",
+  "matchday": 3,
+  "utc": "2026-06-27T21:00:00Z",
+  "city": "Philadelphia",
+  "teamA": "Croatia",
+  "teamB": "Ghana"
+ }
+];
+
+/* ============ STATIC CONFIG ============ */
+const COLORS = {
+  "Maestros":      "var(--maestros)",
+  "Controllers":   "var(--controllers)",
+  "Counter Kings": "var(--punchers)",
+  "Warriors":      "var(--warriors)"
+};
+const HEX = {
+  "Maestros": "#C99A1E", "Controllers": "#1D8A4E",
+  "Counter Kings": "#C92F2F", "Warriors": "#1E5FD6"
+};
+const DISPLAY_NAMES = { "Counter Kings": "Counter Kings (Punchers)" };
+const displayName = a => DISPLAY_NAMES[a] || a;
+// Two-line display node: "Counter Kings" always renders as
+// "Counter Kings<br>(Punchers)". Wrapped in a span so the break works
+// inside flex containers (legend) too.
+function displayNameNode(arch) {
+  const span = document.createElement("span");
+  if (arch === "Counter Kings") {
+    span.append("Counter Kings", document.createElement("br"), "(Punchers)");
+  } else {
+    span.append(displayName(arch));
+  }
+  return span;
+}
+
+const ARCH_CARDS = [
+  { key: "Maestros",
+    tagline: "Orchestrators — the game runs through them",
+    play: ["Possession-dominant", "55-65% avg possession", "Progressive build-up", "Suffocate teams in their own half"],
+    win: "By any margin — 1-0, 6-0 or comeback. Control tempo, create overloads, win through technical superiority",
+    examples: "Spain · Argentina · England" },
+  { key: "Controllers",
+    tagline: "Disciplinarians — clean sheets are their currency",
+    play: ["Structured defensive block", "50-58% possession", "Concede almost nothing", "High clean sheet rate", "Starve opponents of chances"],
+    win: "1-0 or 2-0. Organisation and game management over attacking flair. Grind it out.",
+    examples: "Croatia · Morocco · Netherlands" },
+  { key: "Counter Kings",
+    tagline: "Ambush artists — one chance, one goal",
+    play: ["Transition-first", "38-46% possession", "High direct attack volume", "Compact block", "Explosive on the break"],
+    win: "Cede possession, stay compact, punish on the counter. The classic giant-killer profile.",
+    examples: "France · Austria · Canada" },
+  { key: "Warriors",
+    tagline: "Underdogs who bite — 1-0 or penalties",
+    play: ["Deep defensive block", "35-44% possession", "High tackle success", "Defend deep in numbers", "Hard to break down"],
+    win: "Work-rate over talent. Defend deep, stay organised, punish one set piece or counter. Penalties if needed.",
+    examples: "Jordan · Scotland · Paraguay" }
+];
+
+const DESCRIPTORS = {
+  "Maestros": "Possession-dominant · 55-65% avg possession · Progressive build-up · Low PPDA",
+  "Controllers": "Structured block · 50-58% possession · Low xGA · High clean sheet rate",
+  "Counter Kings": "Transition-first · 38-46% possession · High direct attack volume · Explosive on break",
+  "Warriors": "Deep block · 35-44% possession · High tackle success · Hard to break down"
+};
+
+const NARRATIVES = {
+  "Maestros|Maestros": "Technical battle, midfield dominance decides.",
+  "Controllers|Maestros": "Possession war, margins razor-thin.",
+  "Counter Kings|Maestros": "The classic trap — Maestros dominate but one break kills them.",
+  "Maestros|Warriors": "Maestros should win but Warriors make it ugly.",
+  "Controllers|Controllers": "Tactical chess, likely 0-0 or 1-0.",
+  "Controllers|Counter Kings": "Counter Kings' dream matchup — space behind high line.",
+  "Controllers|Warriors": "War of attrition, defensive masterclass.",
+  "Counter Kings|Counter Kings": "Open game surprisingly, both want space.",
+  "Counter Kings|Warriors": "Counter Kings edge it — more offensive threat.",
+  "Warriors|Warriors": "0-0 until penalties."
+};
+
+// Archetype edge matrix: value for Team A archetype vs Team B archetype.
+// Reverse direction is the negation of the listed value.
+const EDGE_BASE = {
+  "Maestros|Maestros": 0,        "Maestros|Controllers": 5,
+  "Maestros|Counter Kings": -10, "Maestros|Warriors": 15,
+  "Controllers|Controllers": 0,  "Controllers|Counter Kings": -15,
+  "Controllers|Warriors": 5,
+  "Counter Kings|Counter Kings": 0, "Counter Kings|Warriors": 10,
+  "Warriors|Warriors": 0
+};
+function archEdge(a, b) {
+  const k = a + "|" + b;
+  if (k in EDGE_BASE) return EDGE_BASE[k];
+  return -EDGE_BASE[b + "|" + a];
+}
+
+// Group-stage dates derived from the fixtures table (supersedes the earlier
+// hand-entered matchday dates, which disagreed with the verified schedule).
+const GROUP_DATES = {};
+{
+  const londonDay = new Intl.DateTimeFormat("en-GB",
+    { day: "numeric", timeZone: "Europe/London" });
+  const byGroup = {};
+  for (const f of FIXTURES)
+    (byGroup[f.group] = byGroup[f.group] || new Set())
+      .add(parseInt(londonDay.format(new Date(f.utc)), 10));
+  for (const [g, days] of Object.entries(byGroup))
+    GROUP_DATES[g] = "Jun " + [...days].sort((x, y) => x - y).join(" · ");
+}
+
+function flagEmoji(iso) {
+  if (iso === "GB-ENG") return "\u{1F3F4}\u{E0067}\u{E0062}\u{E0065}\u{E006E}\u{E0067}\u{E007F}";
+  if (iso === "GB-SCT") return "\u{1F3F4}\u{E0067}\u{E0062}\u{E0073}\u{E0063}\u{E0074}\u{E007F}";
+  return [...iso].map(c => String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)).join("");
+}
+
+function r32Color(p) {
+  if (p > 75) return "var(--ok)";
+  if (p >= 40) return "var(--warn)";
+  return "var(--risk)";
+}
+
+/* ============ SECTION 1A: ARCHETYPE CARDS ============ */
+const archCardsEl = document.getElementById("archCards");
+for (const a of ARCH_CARDS) {
+  const n = TEAMS.filter(t => t.archetype === a.key).length;
+  const card = document.createElement("div");
+  card.className = "card arch-card";
+  card.style.borderTopColor = HEX[a.key];
+
+  const h3 = document.createElement("h3");
+  h3.appendChild(displayNameNode(a.key));
+  h3.style.color = HEX[a.key];
+  card.appendChild(h3);
+
+  const badge = document.createElement("a");
+  badge.className = "count-badge";
+  badge.href = "#groupstage";
+  badge.textContent = n + " teams →";
+  card.appendChild(badge);
+
+  const tag = document.createElement("p");
+  tag.className = "tagline";
+  tag.textContent = a.tagline;
+  card.appendChild(tag);
+
+  const rows = [
+    ["How they play", a.play, true],
+    ["How they win", [a.win], false],
+    ["Examples", [a.examples], false]
+  ];
+  for (const [label, items, asPills] of rows) {
+    const row = document.createElement("div");
+    row.className = "pill-row";
+    const lab = document.createElement("span");
+    lab.className = "label";
+    lab.textContent = label;
+    row.appendChild(lab);
+    const pills = document.createElement("div");
+    pills.className = "pills";
+    if (asPills) {
+      for (const item of items) {
+        const p = document.createElement("span");
+        p.className = "pill";
+        p.textContent = item;
+        pills.appendChild(p);
+      }
+    } else {
+      const p = document.createElement("span");
+      p.style.fontSize = "0.84rem";
+      p.style.color = "var(--ink-soft)";
+      p.textContent = items[0];
+      pills.appendChild(p);
+    }
+    row.appendChild(pills);
+    card.appendChild(row);
+  }
+  archCardsEl.appendChild(card);
+}
+
+/* ============ SECTION 2: GROUPS ============ */
+const legend = document.getElementById("legend");
+for (const key of Object.keys(COLORS)) {
+  const s = document.createElement("span");
+  const i = document.createElement("i");
+  i.style.background = HEX[key];
+  s.appendChild(i);
+  s.appendChild(displayNameNode(key));
+  legend.appendChild(s);
+}
+const sep = document.createElement("span");
+sep.className = "sep";
+sep.textContent = "% = The Athletic round-of-32 advance probability";
+legend.appendChild(sep);
+
+const groupsEl = document.getElementById("groups");
+const letters = [...new Set(TEAMS.map(t => t.group))].sort();
+for (const letter of letters) {
+  const box = document.createElement("div");
+  box.className = "card group";
+
+  const h = document.createElement("div");
+  h.className = "ghead";
+  h.textContent = "Group " + letter;
+  box.appendChild(h);
+
+  const dates = document.createElement("div");
+  dates.className = "gdates";
+  dates.textContent = GROUP_DATES[letter];
+  box.appendChild(dates);
+
+  const ul = document.createElement("ul");
+  for (const t of TEAMS.filter(x => x.group === letter)) {
+    const li = document.createElement("li");
+    const flag = document.createElement("span");
+    flag.className = "flag";
+    flag.title = t.conf;
+    flag.textContent = flagEmoji(t.iso);
+    const name = document.createElement("span");
+    name.className = "tname";
+    name.textContent = t.name;
+    const pill = document.createElement("span");
+    pill.className = "arch-pill";
+    pill.style.background = HEX[t.archetype];
+    pill.appendChild(displayNameNode(t.archetype));
+    const r32 = document.createElement("span");
+    r32.className = "num r32";
+    r32.style.color = r32Color(t.r32);
+    r32.textContent = Math.round(t.r32) + "%";
+    li.append(flag, name, pill, r32);
+    ul.appendChild(li);
+  }
+  box.appendChild(ul);
+  groupsEl.appendChild(box);
+}
+
+/* ============ SECTION 4: GROUP FIXTURES (tabbed) ============ */
+const teamByName = Object.fromEntries(TEAMS.map(t => [t.name, t]));
+const fxTabs = document.getElementById("fxTabs");
+const fxList = document.getElementById("fxList");
+
+// Kickoffs are stored as UTC instants; the browser renders them in the
+// viewer's timezone. Europe/London is UTC+1 (BST) for all June 2026 dates.
+const USER_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+document.getElementById("fxSubtitle").textContent =
+  `Times shown in your local timezone (${USER_TZ}) · BST shown for reference · Source: Wikipedia / FIFA match schedule`;
+function fmtDate(d, tz) {
+  return new Intl.DateTimeFormat("en-GB",
+    { weekday: "short", day: "numeric", month: "short", timeZone: tz }).format(d);
+}
+function fmtTime(d, tz) {
+  return new Intl.DateTimeFormat("en-US",
+    { hour: "numeric", minute: "2-digit", timeZone: tz }).format(d);
+}
+
+function renderFixtureCard(f) {
+  const ta = teamByName[f.teamA], tb = teamByName[f.teamB];
+  const card = document.createElement("div");
+  card.className = "fixture-card";
+  const leader = tb.r32 > ta.r32 ? tb : ta;   // predicted group leader; ties go to team A
+  card.style.borderLeftColor = HEX[leader.archetype];
+
+  const head = document.createElement("div");
+  head.className = "fxc-head";
+  const md = document.createElement("span");
+  md.className = "md-badge";
+  md.textContent = "MD" + f.matchday;
+  const ko = new Date(f.utc);
+  const meta = document.createElement("span");
+  meta.className = "fxc-meta";
+  meta.textContent = f.city;
+  const times = document.createElement("span");
+  times.className = "fxc-times";
+  const local = document.createElement("span");
+  local.className = "fxc-local";
+  local.textContent = `${fmtDate(ko)} · ${fmtTime(ko)}`;
+  const ref = document.createElement("span");
+  ref.className = "fxc-bstref";
+  ref.textContent = `${fmtDate(ko, "Europe/London")} · ${fmtTime(ko, "Europe/London")} BST`;
+  times.append(local, ref);
+  head.append(md, meta, times);
+  card.appendChild(head);
+
+  const main = document.createElement("div");
+  main.className = "fxc-main";
+  const side = (t, right) => {
+    const el = document.createElement("div");
+    el.className = "fxc-team" + (right ? " right" : "");
+    const flag = document.createElement("span");
+    flag.className = "flag";
+    flag.textContent = flagEmoji(t.iso);
+    const nm = document.createElement("span");
+    nm.textContent = t.name;
+    const pill = document.createElement("span");
+    pill.className = "arch-pill";
+    pill.style.background = HEX[t.archetype];
+    pill.appendChild(displayNameNode(t.archetype));
+    el.append(flag, nm, pill);
+    return el;
+  };
+  const vs = document.createElement("span");
+  vs.className = "fxc-vs";
+  vs.textContent = "VS";
+  main.append(side(ta, false), vs, side(tb, true));
+  card.appendChild(main);
+
+  const foot = document.createElement("div");
+  foot.className = "fxc-foot";
+  const nar = document.createElement("span");
+  nar.className = "fxc-narrative";
+  nar.textContent = NARRATIVES[[ta.archetype, tb.archetype].sort().join("|")];
+  const probs = document.createElement("span");
+  probs.className = "fxc-probs";
+  const pa = document.createElement("span");
+  pa.style.color = r32Color(ta.r32);
+  pa.textContent = Math.round(ta.r32) + "%";
+  const pb = document.createElement("span");
+  pb.style.color = r32Color(tb.r32);
+  pb.textContent = Math.round(tb.r32) + "%";
+  probs.append(pa, " vs ", pb);
+  foot.append(nar, probs);
+  card.appendChild(foot);
+  return card;
+}
+
+function showGroupFixtures(letter) {
+  for (const b of fxTabs.children)
+    b.classList.toggle("active", b.dataset.group === letter);
+  fxList.innerHTML = "";
+  for (const f of FIXTURES.filter(x => x.group === letter))
+    fxList.appendChild(renderFixtureCard(f));
+}
+
+for (const letter of letters) {
+  const b = document.createElement("button");
+  b.className = "tab";
+  b.type = "button";
+  b.dataset.group = letter;
+  b.textContent = letter;
+  b.addEventListener("click", () => showGroupFixtures(letter));
+  fxTabs.appendChild(b);
+}
+showGroupFixtures("A");
+
+/* ============ SECTION 3: MATCHUP EXPLORER ============ */
+const selA = document.getElementById("teamA");
+const selB = document.getElementById("teamB");
+const sorted = [...TEAMS].sort((a, b) => a.name.localeCompare(b.name));
+for (const sel of [selA, selB]) {
+  const opt = document.createElement("option");
+  opt.value = "";
+  opt.textContent = "— select a team —";
+  sel.appendChild(opt);
+  for (const t of sorted) {
+    const o = document.createElement("option");
+    o.value = t.name;
+    o.textContent = `${flagEmoji(t.iso)} ${t.name} (${displayName(t.archetype)})`;
+    sel.appendChild(o);
+  }
+}
+
+function renderProfile(el, t) {
+  el.innerHTML = "";
+  if (!t) {
+    el.style.borderTopColor = "var(--border)";
+    const p = document.createElement("p");
+    p.className = "placeholder";
+    p.textContent = "Select a team above.";
+    el.appendChild(p);
+    return;
+  }
+  el.style.borderTopColor = HEX[t.archetype];
+
+  const head = document.createElement("div");
+  head.className = "phead";
+  const flag = document.createElement("span");
+  flag.className = "pflag";
+  flag.textContent = flagEmoji(t.iso);
+  const h3 = document.createElement("h3");
+  h3.textContent = t.name;
+  head.append(flag, h3);
+  el.appendChild(head);
+
+  const arch = document.createElement("div");
+  arch.className = "parch";
+  arch.style.color = HEX[t.archetype];
+  arch.appendChild(displayNameNode(t.archetype));
+  el.appendChild(arch);
+
+  const def = document.createElement("p");
+  def.className = "pdef";
+  def.textContent = DEFINITIONS[t.archetype];
+  el.appendChild(def);
+
+  const desc = document.createElement("p");
+  desc.className = "pdesc";
+  desc.textContent = DESCRIPTORS[t.archetype];
+  el.appendChild(desc);
+
+  const table = document.createElement("table");
+  const rows = [
+    ["Group", t.group],
+    ["Confederation", t.conf],
+    ["FIFA code", t.fifa],
+    ["Advance prob (The Athletic)", t.r32.toFixed(0) + "%"],
+    ["Avg squad age", t.avgAge.toFixed(1)],
+    ["Classification basis", t.confidence]
+  ];
+  for (const [k, v] of rows) {
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td"); td1.textContent = k;
+    const td2 = document.createElement("td"); td2.textContent = v;
+    tr.append(td1, td2);
+    table.appendChild(tr);
+  }
+  el.appendChild(table);
+}
+
+/* ---- SVG radar chart ---- */
+const RADAR_AXES = [
+  ["R32", "r32"], ["R16", "r16"], ["QF", "qf"],
+  ["SF", "sf"], ["FINAL", "fin"], ["WIN", "win"]
+];
+const NS = "http://www.w3.org/2000/svg";
+
+function radarPoint(cx, cy, radius, axisIdx, value) {
+  const angle = (Math.PI * 2 * axisIdx / RADAR_AXES.length) - Math.PI / 2;
+  const r = radius * value / 100;
+  return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+}
+
+function svgEl(tag, attrs) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+function renderRadar(a, b) {
+  const card = document.getElementById("radarCard");
+  card.innerHTML = "";
+  const h4 = document.createElement("h4");
+  h4.textContent = "Tournament probability profile (The Athletic)";
+  card.appendChild(h4);
+
+  if (!a || !b) {
+    const p = document.createElement("p");
+    p.className = "placeholder";
+    p.textContent = "Pick two teams to compare their tournament runs.";
+    card.appendChild(p);
+    return;
+  }
+
+  const W = 560, H = 430, cx = W / 2, cy = 205, R = 140;
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img" });
+
+  // Grid rings
+  for (const frac of [25, 50, 75, 100]) {
+    const pts = RADAR_AXES.map((_, i) => radarPoint(cx, cy, R, i, frac).join(",")).join(" ");
+    svg.appendChild(svgEl("polygon", { points: pts, fill: "none",
+      stroke: "#E8EAED", "stroke-width": 1 }));
+  }
+  // Axis spokes + labels
+  RADAR_AXES.forEach(([label], i) => {
+    const [x, y] = radarPoint(cx, cy, R, i, 100);
+    svg.appendChild(svgEl("line", { x1: cx, y1: cy, x2: x, y2: y,
+      stroke: "#E8EAED", "stroke-width": 1 }));
+    const [lx, ly] = radarPoint(cx, cy, R + 26, i, 100);
+    const text = svgEl("text", { x: lx, y: ly + 4, "text-anchor": "middle",
+      "font-size": 12, "font-weight": 700, fill: "#9AA5B4",
+      "letter-spacing": "0.06em" });
+    text.textContent = label;
+    svg.appendChild(text);
+  });
+
+  // Team polygons + vertex values. When both teams share an archetype color,
+  // offset team B by 5px and dash its stroke so the polygons stay distinguishable;
+  // fill opacities split 0.3 (A) / 0.15 (B) in that case.
+  const same = HEX[a.archetype] === HEX[b.archetype];
+  // Same archetype: team B switches to slate grey — same-shade polygons are
+  // indistinguishable even with dash/offset. Team A always keeps its color.
+  const colorA = HEX[a.archetype];
+  const colorB = same ? "#64748B" : HEX[b.archetype];
+  const series = [
+    [a, colorA, -8, same ? 0.3 : 0.25, null, 0],
+    [b, colorB, 12, same ? 0.15 : 0.25, same ? "6 4" : null, same ? 5 : 0]
+  ];
+  for (const [t, color, dy, fillOp, dash, off] of series) {
+    const g = svgEl("g", off ? { transform: `translate(${off},${off})` } : {});
+    const vals = RADAR_AXES.map(([, key]) => t[key]);
+    const pts = vals.map((v, i) => radarPoint(cx, cy, R, i, v));
+    const polyAttrs = {
+      points: pts.map(p => p.join(",")).join(" "),
+      fill: color, "fill-opacity": fillOp, stroke: color, "stroke-width": 2
+    };
+    if (dash) polyAttrs["stroke-dasharray"] = dash;
+    g.appendChild(svgEl("polygon", polyAttrs));
+    pts.forEach(([x, y], i) => {
+      g.appendChild(svgEl("circle", { cx: x, cy: y, r: 3, fill: color }));
+      const txt = svgEl("text", { x: x, y: y + dy, "text-anchor": "middle",
+        "font-size": 11, "font-weight": 600, fill: color });
+      txt.textContent = Math.round(vals[i]) + "%";
+      g.appendChild(txt);
+    });
+    svg.appendChild(g);
+  }
+  card.appendChild(svg);
+
+  const leg = document.createElement("div");
+  leg.className = "radar-legend";
+  for (const [t, color] of [[a, colorA], [b, colorB]]) {
+    const s = document.createElement("span");
+    const i = document.createElement("i");
+    i.style.background = color;
+    s.appendChild(i);
+    s.appendChild(document.createTextNode(t.name));
+    leg.appendChild(s);
+  }
+  card.appendChild(leg);
+}
+
+/* ---- Winner prediction ---- */
+function scoreTeam(t, opp) {
+  const strength = t.win * 0.4;
+  const edge = archEdge(t.archetype, opp.archetype);
+  const age = (t.avgAge < opp.avgAge - 2) ? 10 : 0;
+  const advance = t.gsProb * 0.2;
+  return { strength, edge, age, advance,
+           total: strength + edge + age + advance };
+}
+
+function renderCalc(t, s) {
+  const div = document.createElement("div");
+  div.className = "calc";
+  const h5 = document.createElement("h5");
+  h5.textContent = `${flagEmoji(t.iso)} ${t.name}`;
+  div.appendChild(h5);
+  const table = document.createElement("table");
+  const rows = [
+    ["Tournament strength (40%): win_pct × 0.4", s.strength.toFixed(1)],
+    ["Archetype edge (30%): matrix value", (s.edge >= 0 ? "+" : "") + s.edge],
+    ["Squad age edge (10%): younger by >2yr", "+" + s.age],
+    ["Group advance prob (20%): gs_probability × 0.2", s.advance.toFixed(1)]
+  ];
+  for (const [k, v] of rows) {
+    const tr = document.createElement("tr");
+    const td1 = document.createElement("td"); td1.textContent = k;
+    const td2 = document.createElement("td"); td2.textContent = v;
+    tr.append(td1, td2);
+    table.appendChild(tr);
+  }
+  const tr = document.createElement("tr");
+  tr.className = "total";
+  const td1 = document.createElement("td"); td1.textContent = "TOTAL";
+  const td2 = document.createElement("td"); td2.textContent = s.total.toFixed(1);
+  tr.append(td1, td2);
+  table.appendChild(tr);
+  div.appendChild(table);
+  return div;
+}
+
+function renderWinner(a, b) {
+  const card = document.getElementById("winnerCard");
+  card.innerHTML = "";
+  const h4 = document.createElement("h4");
+  h4.textContent = "Predicted Winner";
+  const sub = document.createElement("p");
+  sub.className = "subnote";
+  sub.textContent = "Illustration model only";
+  card.append(h4, sub);
+
+  if (!a || !b) {
+    const p = document.createElement("p");
+    p.className = "placeholder";
+    p.textContent = "Pick two teams to run the prediction.";
+    card.appendChild(p);
+    return null;
+  }
+
+  const sa = scoreTeam(a, b);
+  const sb = scoreTeam(b, a);
+
+  const grid = document.createElement("div");
+  grid.className = "calc-grid";
+  grid.append(renderCalc(a, sa), renderCalc(b, sb));
+  card.appendChild(grid);
+
+  const verdict = document.createElement("p");
+  verdict.className = "verdict";
+  let winner = null;
+  if (sa.total === sb.total) {
+    verdict.textContent = "Dead heat — identical scores (" + sa.total.toFixed(1) + ")";
+  } else {
+    winner = sa.total > sb.total ? a : b;
+    const ws = Math.max(sa.total, sb.total), ls = Math.min(sa.total, sb.total);
+    verdict.style.color = HEX[winner.archetype];
+    verdict.textContent =
+      `${flagEmoji(winner.iso)} ${winner.name} — ${ws.toFixed(1)} vs ${ls.toFixed(1)}`;
+  }
+  card.appendChild(verdict);
+
+  const disc = document.createElement("p");
+  disc.className = "disclaimer";
+  disc.textContent = "⚠️ For illustration purposes only. This model combines " +
+    "The Athletic tournament probabilities with archetype matchup logic derived from FBref " +
+    "qualifying data and The Athletic tactical analysis. It is not a betting tool and " +
+    "does not account for injuries, current form, or match context.";
+  card.appendChild(disc);
+  return winner;
+}
+
+function renderMatchupPanel(a, b, winner) {
+  const card = document.getElementById("matchupCard");
+  card.innerHTML = "";
+  const h4 = document.createElement("h4");
+  h4.textContent = "Archetype vs Archetype";
+  card.appendChild(h4);
+  card.style.borderLeftColor = winner ? HEX[winner.archetype] : "var(--border)";
+
+  if (!a || !b) {
+    const p = document.createElement("p");
+    p.className = "placeholder";
+    p.textContent = "Pick two teams to see how their playing identities collide.";
+    card.appendChild(p);
+    return;
+  }
+  const key = [a.archetype, b.archetype].sort().join("|");
+  const pairing = document.createElement("p");
+  pairing.className = "pairing";
+  pairing.append(displayNameNode(a.archetype), " vs ", displayNameNode(b.archetype));
+  const narrative = document.createElement("p");
+  narrative.className = "narrative";
+  narrative.textContent = NARRATIVES[key];
+  card.append(pairing, narrative);
+}
+
+function renderAll() {
+  const a = TEAMS.find(t => t.name === selA.value) || null;
+  const b = TEAMS.find(t => t.name === selB.value) || null;
+  renderProfile(document.getElementById("profileA"), a);
+  renderProfile(document.getElementById("profileB"), b);
+  renderRadar(a, b);
+  const winner = renderWinner(a, b);
+  renderMatchupPanel(a, b, winner);
+}
+
+selA.addEventListener("change", renderAll);
+selB.addEventListener("change", renderAll);
+</script>
+
+</body>
+</html>
