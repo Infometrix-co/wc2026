@@ -232,6 +232,15 @@
   .profile .pdesc { font-size: 0.8rem; color: var(--ink-soft); background: var(--surface);
                     border: 1px solid var(--border); border-radius: 6px;
                     padding: 8px 12px; margin-bottom: 14px; }
+  .profile .pquote { font-size: 0.82rem; color: var(--ink-soft); font-style: italic;
+                     border-left: 3px solid var(--border); padding: 2px 0 2px 12px;
+                     margin-bottom: 8px; }
+  .profile .pquote .pcite { display: block; font-style: normal; font-size: 0.68rem;
+                            color: var(--ink-muted); text-transform: uppercase;
+                            letter-spacing: 0.06em; margin-top: 4px; }
+  .profile .pdiverge { font-size: 0.74rem; color: #92610A; background: #FFF8E6;
+                       border: 1px solid #F0D98A; border-radius: 6px;
+                       padding: 6px 10px; margin-bottom: 14px; }
   .profile table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
   .profile td { padding: 6px 4px; border-top: 1px solid var(--border); }
   .profile tr:nth-child(odd) td { background: var(--surface); }
@@ -291,6 +300,104 @@
     .selectors { flex-direction: column; }
     .selectors select { width: 100%; }
     .count-badge { position: static; display: inline-block; margin-top: 10px; }
+  }
+
+  /* ---------- SECTION 5: KNOCKOUT BRACKET (mobile-first scroll-tree) ---------- */
+  #bracket .ko-intro { color: var(--ink-soft); font-size: 0.88rem; max-width: 70ch; margin-bottom: 14px; }
+  #bracket .ko-tabs { position: sticky; top: 0; z-index: 6; display: flex; gap: 6px;
+    overflow-x: auto; padding: 8px 0; background: var(--bg); }
+  #bracket .ko-tab { flex: 0 0 auto; border: 1px solid var(--border); background: var(--surface);
+    color: var(--ink-soft); border-radius: 999px; padding: 6px 16px; font-size: 0.8rem;
+    font-weight: 700; cursor: pointer; white-space: nowrap; }
+  #bracket .ko-tab.active { background: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
+
+  #bracket { --ko-card-h: 242px; }   /* Fix 2: single card-height constant; all KO geometry derives from this */
+  #bracket .ko-cards { display: contents; }   /* mobile: transparent wrapper — layout identical to before */
+  #bracket .ko-tree { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x proximity;
+    padding: 16px 2px 10px; }
+  #bracket .ko-round { flex: 0 0 86vw; max-width: 340px; scroll-snap-align: start;
+    display: flex; flex-direction: column; justify-content: flex-start; gap: 14px; }
+  #bracket .ko-round-head { position: sticky; top: 46px; align-self: flex-start;
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-muted); background: var(--bg); padding: 2px 0; }
+
+  #bracket .ko-card { position: relative; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; box-shadow: var(--shadow); padding: 10px 12px;
+    display: flex; flex-direction: column; }   /* Fix 6: flex column; fixed height is DESKTOP-only (mobile sizes to content, no dead space) */
+  #bracket .ko-head { display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.68rem; color: var(--ink-muted); margin-bottom: 6px; min-height: 14px; }
+  #bracket .ko-no { font-weight: 700; font-variant-numeric: tabular-nums; }
+  #bracket .ko-side { display: flex; align-items: center; gap: 8px; padding: 4px 0; min-height: 26px; }
+  #bracket .ko-shield { width: 18px; height: 18px; color: var(--ink-muted); flex: 0 0 auto; }
+  #bracket .ko-chip { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.03em;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; }
+  #bracket .ko-text { display: flex; flex-direction: column; min-width: 0; }
+  #bracket .ko-name { font-size: 0.9rem; font-weight: 600; color: var(--ink); line-height: 1.25; }
+  #bracket .ko-tbd .ko-name { color: var(--ink-soft); }
+  #bracket .ko-sub { font-size: 0.7rem; color: var(--ink-muted); margin-left: 0; text-align: left; }
+  #bracket .arch-pill.ko-pill { width: auto; margin-left: auto; }
+  /* Fix 5: archetype pill on its own line under the name (settled team cards only) */
+  #bracket .ko-side-team { flex-direction: column; align-items: flex-start; gap: 4px; }
+  #bracket .ko-side-team .ko-side-top { display: flex; align-items: center; gap: 8px; align-self: stretch; }
+  #bracket .ko-side-team .arch-pill.ko-pill { margin-left: 0; }
+  #bracket .ko-vs { font-size: 0.62rem; font-weight: 700; color: var(--ink-muted);
+    text-transform: uppercase; letter-spacing: 0.1em; margin: 2px 0 2px 26px; }
+  #bracket .ko-clash { font-size: 0.78rem; color: var(--ink-soft); margin-top: 6px;
+    border-top: 1px dashed var(--border); padding-top: 6px; }
+  #bracket .ko-foot { display: flex; align-items: center; justify-content: space-between;
+    margin-top: auto; gap: 10px; }   /* Fix 2: meta row bottom-anchored => aligned buttons */
+  #bracket .ko-lens { font-size: 0.66rem; color: var(--ink-muted); }
+  #bracket .ko-read { border-bottom: 1px dashed var(--ink-muted); }
+  #bracket .ko-full { font-size: 0.74rem; font-weight: 700; color: var(--brand-blue);
+    background: #fff; border: 1px solid var(--brand-blue); border-radius: 6px; padding: 5px 12px;
+    cursor: pointer; white-space: nowrap; }
+  #bracket .ko-full:disabled { color: var(--ink-muted); border-color: var(--border); cursor: not-allowed; }
+  #bracket .ko-thirdgroup { margin-top: 6px; }   /* mobile: stacks under 104 in the Final column */
+  #bracket .ko-round-sub { font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-muted); margin-bottom: 8px; }
+
+  /* Final (Match 104) — visual destination, project gold #C99A1E (Maestros). No FIFA marks.
+     Heavier frame (not larger) keeps the verified 185px equal-height intact. */
+  #bracket #ko-m104 { border: 2px solid #C99A1E; background: rgba(201, 154, 30, 0.07);
+    box-shadow: 0 1px 4px rgba(201, 154, 30, 0.28), 0 0 0 1px rgba(201, 154, 30, 0.18); }
+  #bracket .ko-f .ko-round-head { align-self: stretch; text-align: center; }  /* centre FINAL + star (Final only) */
+  #bracket .ko-f .ko-round-head::after { content: "\2605"; color: #C99A1E;
+    margin-left: 7px; font-size: 1.25em; }
+  /* Final card, MOBILE only: drop the white header band so FINAL + star sit on the
+     gold tint (this band's square corners were the corner-bleed source). Scoped to
+     .ko-f and <1024px so the DESKTOP stage-label header row and every other label
+     (shared .ko-round-head class) are untouched. */
+  @media (max-width: 1023px) {
+    #bracket .ko-f .ko-round-head { background: transparent; }
+  }
+
+  /* connector nubs in the inter-column gap */
+  #bracket .ko-round:not(.ko-r32) .ko-card::before { content: ""; position: absolute;
+    left: -18px; top: 50%; width: 18px; height: 1px; background: var(--border); }
+  #bracket .ko-round:not(.ko-f) .ko-card::after { content: ""; position: absolute;
+    right: -18px; top: 50%; width: 18px; height: 1px; background: var(--border); }
+
+  /* ---------- SECTION 5: DESKTOP TREE — left->right, no scroll, no connector lines ---------- */
+  @media (min-width: 1024px) {
+    #bracket .ko-tabs { display: none; }            /* round-tab strip is a mobile-only affordance */
+    #bracket .ko-tree { overflow-x: visible; scroll-snap-type: none; gap: 16px;
+      align-items: stretch; padding: 0; min-height: calc(16 * var(--ko-card-h));   /* Fix 2: derived (16 R32 cards) */ }   /* equal-height columns + breathing room
+                                                                   so pure space-around centres downstream */
+    #bracket .ko-round { flex: 1 1 0; max-width: none; min-width: 0; gap: 0;
+      scroll-snap-align: none;    /* each downstream card lands on its two
+                                                                   feeders' vertical midpoint */
+      position: relative; }   /* Fix 3: header now in-flow & sticky; no padding reserve */
+    #bracket .ko-round-head { position: sticky; top: 0; align-self: auto; z-index: 5;
+      background: var(--bg); padding: 0 2px 8px; border-bottom: 1px solid var(--border); }   /* Fix 3: sticky to viewport; opaque so cards scroll under; plain sticky positioning, no compositing hint */
+    #bracket .ko-cards { display: flex; flex-direction: column; justify-content: space-around;
+      flex: 1 1 auto; min-height: calc(16 * var(--ko-card-h)); position: relative; }   /* Fix 2/3: centring container, exactly 16 card-heights tall */
+    #bracket .ko-card { margin: 0; height: var(--ko-card-h); }   /* Fix 2: fixed height => exact downstream centring */
+    #bracket .ko-card::before, #bracket .ko-card::after { display: none; }  /* NO connector lines on desktop */
+    /* desktop: 104 stays centred (sole flex child); the third-place group is pulled
+       out of flow and pinned directly below 104. Offset is deterministic for the
+       verified 185px card + 46px column padding-top. */
+    #bracket .ko-f .ko-thirdgroup { position: absolute; left: 0; right: 0; top: 50%;
+      margin-top: calc(var(--ko-card-h) / 2 + 36px);   /* Fix 2: derived — half a card below the centred Final */ }
   }
 </style>
 </head>
@@ -399,9 +506,20 @@
 
 </section>
 
+
+<!-- ============ SECTION 5 — KNOCKOUT BRACKET ============ -->
+<section id="bracket">
+  <div class="section-label">Section 5 &mdash; Knockout Bracket</div>
+  <p class="ko-intro">Round of 32 &rarr; Final. Swipe the tree left&ndash;right, or tap a round.
+     Slots show qualification descriptors until the group stage and FIFA&rsquo;s third-place
+     ranking are final &mdash; no team is placed early, and no probabilities are shown here.</p>
+  <div class="ko-tabs" id="koTabs"></div>
+  <div class="ko-tree" id="koTree"></div>
+</section>
+
 <footer>
   Infometrix &middot; WC2026 &middot; Pedro Morcillo<br>
-  Archetype framework &middot; FBref &middot; The Athletic probabilities
+  Archetype framework &middot; FBref &middot; The Athletic
 </footer>
 
 </div>
@@ -426,7 +544,9 @@ const TEAMS = [
   "qf": 11.0,
   "sf": 3.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "3-4-3, opposition-adaptive, resilient, league-leading tackles/recoveries",
+  "diverge": null
  },
  {
   "name": "Mexico",
@@ -443,7 +563,9 @@ const TEAMS = [
   "qf": 20.0,
   "sf": 7.0,
   "fin": 2.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "frenetic, quick combination play and transitions, not possession-led (Aguirre)",
+  "diverge": null
  },
  {
   "name": "South Africa",
@@ -460,7 +582,9 @@ const TEAMS = [
   "qf": 2.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "fluid 4-3-3, well-organised, technically gifted (Broos)",
+  "diverge": null
  },
  {
   "name": "South Korea",
@@ -477,7 +601,9 @@ const TEAMS = [
   "qf": 12.0,
   "sf": 3.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "build-up plus pressing intensity, efficiency-focused (work in progress)",
+  "diverge": null
  },
  {
   "name": "Bosnia and Herzegovina",
@@ -494,7 +620,9 @@ const TEAMS = [
   "qf": 9.0,
   "sf": 2.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-4-2, compact and organised out of possession, plenty of width",
+  "diverge": null
  },
  {
   "name": "Canada",
@@ -511,7 +639,9 @@ const TEAMS = [
   "qf": 18.0,
   "sf": 5.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-4-2, fast, direct, high-intensity full-throttle transitions (Marsch)",
+  "diverge": null
  },
  {
   "name": "Qatar",
@@ -528,7 +658,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-4-2 / 4-2-3-1, organised, hard-working off the ball, balanced (Lopetegui)",
+  "diverge": null
  },
  {
   "name": "Switzerland",
@@ -545,7 +677,9 @@ const TEAMS = [
   "qf": 19.0,
   "sf": 6.0,
   "fin": 2.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "tactically flexible (3-4-3 / 4-3-3), experienced, balanced",
+  "diverge": null
  },
  {
   "name": "Brazil",
@@ -562,7 +696,9 @@ const TEAMS = [
   "qf": 39.0,
   "sf": 22.0,
   "fin": 11.0,
-  "win": 5.0
+  "win": 5.0,
+  "quote": "fluid 4-2-3-1, attacker-laden, Casemiro restores defensive balance (Ancelotti)",
+  "diverge": null
  },
  {
   "name": "Haiti",
@@ -579,7 +715,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "deep defensive block, organised, dangerous on transition",
+  "diverge": null
  },
  {
   "name": "Morocco",
@@ -596,7 +734,9 @@ const TEAMS = [
   "qf": 15.0,
   "sf": 5.0,
   "fin": 2.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "organised without the ball, wide combinations, solid block",
+  "diverge": null
  },
  {
   "name": "Scotland",
@@ -613,7 +753,9 @@ const TEAMS = [
   "qf": 11.0,
   "sf": 4.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defensive back-five/back-four, stability-first, struggles to control games",
+  "diverge": null
  },
  {
   "name": "Australia",
@@ -630,7 +772,9 @@ const TEAMS = [
   "qf": 3.0,
   "sf": 1.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "pragmatic, structured 4-3-3 base, direct to forwards",
+  "diverge": "Sources diverge: badged Controllers; The Athletic notes direct play to the forwards."
  },
  {
   "name": "Paraguay",
@@ -647,7 +791,9 @@ const TEAMS = [
   "qf": 9.0,
   "sf": 3.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "ultra-defensive, low possession, towering centre-backs, stubborn (Alfaro)",
+  "diverge": null
  },
  {
   "name": "Turkey",
@@ -664,7 +810,9 @@ const TEAMS = [
   "qf": 21.0,
   "sf": 8.0,
   "fin": 3.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "4-2-3-1, flair plus defensive discipline, young talent (Montella)",
+  "diverge": null
  },
  {
   "name": "United States",
@@ -673,7 +821,7 @@ const TEAMS = [
   "conf": "CONCACAF",
   "group": "D",
   "archetype": "Counter Kings",
-  "confidence": "mixed",
+  "confidence": "expert",
   "gsProb": 69.5,
   "avgAge": 26.92,
   "r32": 85.0,
@@ -681,7 +829,9 @@ const TEAMS = [
   "qf": 23.0,
   "sf": 9.0,
   "fin": 3.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "three at the back, build-out flexibility, attacking wing-backs (Pochettino)",
+  "diverge": "Sources diverge: Counter Kings assigned by expert judgment (host, no data); The Athletic describes a possession-based build-out."
  },
  {
   "name": "Curacao",
@@ -698,7 +848,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-3-3, possession and build-from-the-back (Dutch-schooled)",
+  "diverge": null
  },
  {
   "name": "Ecuador",
@@ -715,7 +867,9 @@ const TEAMS = [
   "qf": 10.0,
   "sf": 4.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defensive solidity and grit, elite back line, very low-scoring",
+  "diverge": null
  },
  {
   "name": "Germany",
@@ -732,7 +886,9 @@ const TEAMS = [
   "qf": 31.0,
   "sf": 18.0,
   "fin": 9.0,
-  "win": 4.0
+  "win": 4.0,
+  "quote": "high press, technical, quick vertical play through Musiala/Wirtz, inverted full-backs",
+  "diverge": "Sources diverge: badged Maestros; The Athletic emphasises vertical, transition play."
  },
  {
   "name": "Ivory Coast",
@@ -749,7 +905,9 @@ const TEAMS = [
   "qf": 14.0,
   "sf": 6.0,
   "fin": 2.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "4-3-3, prolific and unpredictable, depth in wide areas",
+  "diverge": null
  },
  {
   "name": "Japan",
@@ -766,7 +924,9 @@ const TEAMS = [
   "qf": 19.0,
   "sf": 7.0,
   "fin": 2.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "flexible shape, relentless press, fast ball movement, technical (Moriyasu)",
+  "diverge": null
  },
  {
   "name": "Netherlands",
@@ -783,7 +943,9 @@ const TEAMS = [
   "qf": 35.0,
   "sf": 17.0,
   "fin": 8.0,
-  "win": 3.0
+  "win": 3.0,
+  "quote": "functional over creative, defensively sound, controlled, Depay-reliant",
+  "diverge": null
  },
  {
   "name": "Sweden",
@@ -800,7 +962,9 @@ const TEAMS = [
   "qf": 7.0,
   "sf": 2.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "possession-leaning (Potter) but pragmatic, three-man defence",
+  "diverge": null
  },
  {
   "name": "Tunisia",
@@ -817,7 +981,9 @@ const TEAMS = [
   "qf": 2.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defence-first, ultra-solid, not expansive, relies on individual flashes",
+  "diverge": null
  },
  {
   "name": "Belgium",
@@ -834,7 +1000,9 @@ const TEAMS = [
   "qf": 44.0,
   "sf": 20.0,
   "fin": 10.0,
-  "win": 5.0
+  "win": 5.0,
+  "quote": "4-3-3, possession with counter-pressing (Garcia)",
+  "diverge": null
  },
  {
   "name": "Egypt",
@@ -851,7 +1019,9 @@ const TEAMS = [
   "qf": 8.0,
   "sf": 2.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "flexible (4-3-3 / 5-3-2), press or deep block, counter with pace (Salah)",
+  "diverge": null
  },
  {
   "name": "Iran",
@@ -868,7 +1038,9 @@ const TEAMS = [
   "qf": 4.0,
   "sf": 1.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defensive two-banks-of-four, no-frills, counter through Taremi (Queiroz mould)",
+  "diverge": null
  },
  {
   "name": "New Zealand",
@@ -877,7 +1049,7 @@ const TEAMS = [
   "conf": "OFC",
   "group": "G",
   "archetype": "Warriors",
-  "confidence": "mixed",
+  "confidence": "expert",
   "gsProb": 52.9,
   "avgAge": 28.12,
   "r32": 44.0,
@@ -885,7 +1057,9 @@ const TEAMS = [
   "qf": 2.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-2-3-1, possession-based build-up, Chris Wood as focal point",
+  "diverge": "Sources diverge: Warriors assigned by expert judgment (no qualifying data); The Athletic describes possession-based build-up."
  },
  {
   "name": "Cape Verde",
@@ -902,7 +1076,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-2-3-1, fast direct attack, width from full-backs, solid experienced defence",
+  "diverge": null
  },
  {
   "name": "Saudi Arabia",
@@ -919,7 +1095,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defensive, 4-4-2 with deep midfield, reactive (Donis)",
+  "diverge": null
  },
  {
   "name": "Spain",
@@ -936,7 +1114,9 @@ const TEAMS = [
   "qf": 58.0,
   "sf": 44.0,
   "fin": 29.0,
-  "win": 19.0
+  "win": 19.0,
+  "quote": "possession-based, quick to pacy wide attackers, collective high press",
+  "diverge": null
  },
  {
   "name": "Uruguay",
@@ -953,7 +1133,9 @@ const TEAMS = [
   "qf": 20.0,
   "sf": 9.0,
   "fin": 3.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "relentless high press, tenacious midfield, fast counter through front three",
+  "diverge": null
  },
  {
   "name": "France",
@@ -970,7 +1152,9 @@ const TEAMS = [
   "qf": 63.0,
   "sf": 48.0,
   "fin": 32.0,
-  "win": 21.0
+  "win": 21.0,
+  "quote": "4-2-3-1, elite attacking talent around Mbappé, pragmatic",
+  "diverge": null
  },
  {
   "name": "Iraq",
@@ -987,7 +1171,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-4-2, defensive solidity, direct, physical (Arnold)",
+  "diverge": null
  },
  {
   "name": "Norway",
@@ -1004,7 +1190,9 @@ const TEAMS = [
   "qf": 22.0,
   "sf": 10.0,
   "fin": 4.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "attack-minded 4-2-3-1 built around Haaland and Ødegaard",
+  "diverge": null
  },
  {
   "name": "Senegal",
@@ -1021,7 +1209,9 @@ const TEAMS = [
   "qf": 21.0,
   "sf": 9.0,
   "fin": 4.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "4-3-3 / 4-2-3-1, versatile interchanging front three, strong spine",
+  "diverge": null
  },
  {
   "name": "Algeria",
@@ -1038,7 +1228,9 @@ const TEAMS = [
   "qf": 8.0,
   "sf": 3.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "4-3-3, wide passing combinations, chances from crosses (Mahrez, Amoura)",
+  "diverge": null
  },
  {
   "name": "Argentina",
@@ -1055,7 +1247,9 @@ const TEAMS = [
   "qf": 48.0,
   "sf": 31.0,
   "fin": 18.0,
-  "win": 10.0
+  "win": 10.0,
+  "quote": "flexible (Scaloni), strong back four and dominant midfield, dynamic European-driven attack",
+  "diverge": null
  },
  {
   "name": "Austria",
@@ -1072,7 +1266,9 @@ const TEAMS = [
   "qf": 12.0,
   "sf": 5.0,
   "fin": 1.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "high press, high intensity, fast transitions (Rangnick / Red Bull)",
+  "diverge": null
  },
  {
   "name": "Jordan",
@@ -1089,7 +1285,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "work-rate and defensive organisation, counter-attacking minnow",
+  "diverge": null
  },
  {
   "name": "Colombia",
@@ -1106,7 +1304,9 @@ const TEAMS = [
   "qf": 21.0,
   "sf": 10.0,
   "fin": 4.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "4-2-3-1, flair with defensive solidity, attacking full-backs, Díaz-led",
+  "diverge": null
  },
  {
   "name": "DR Congo",
@@ -1123,7 +1323,9 @@ const TEAMS = [
   "qf": 4.0,
   "sf": 1.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "adaptable 4-2-3-1/4-4-2, resilient, collective (Desabre)",
+  "diverge": null
  },
  {
   "name": "Portugal",
@@ -1140,7 +1342,9 @@ const TEAMS = [
   "qf": 47.0,
   "sf": 29.0,
   "fin": 17.0,
-  "win": 8.0
+  "win": 8.0,
+  "quote": "tactically adaptable (4-3-3/4-2-3-1/3-4-2-1), attacking full-backs, creative midfield, not possession-obsessed",
+  "diverge": null
  },
  {
   "name": "Uzbekistan",
@@ -1157,7 +1361,9 @@ const TEAMS = [
   "qf": 2.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "defensive, hard to beat, result-oriented (Cannavaro)",
+  "diverge": null
  },
  {
   "name": "Croatia",
@@ -1174,7 +1380,9 @@ const TEAMS = [
   "qf": 20.0,
   "sf": 9.0,
   "fin": 4.0,
-  "win": 1.0
+  "win": 1.0,
+  "quote": "ageing but wily, experienced midfield-based control",
+  "diverge": null
  },
  {
   "name": "England",
@@ -1191,7 +1399,9 @@ const TEAMS = [
   "qf": 52.0,
   "sf": 33.0,
   "fin": 20.0,
-  "win": 11.0
+  "win": 11.0,
+  "quote": "dynamic, physical PL-style, fast ball-winning and transitions (Tuchel)",
+  "diverge": "Sources diverge: classified Maestros on qualifying goal output; The Athletic describes a transition-led side under Tuchel."
  },
  {
   "name": "Ghana",
@@ -1208,7 +1418,9 @@ const TEAMS = [
   "qf": 5.0,
   "sf": 1.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "counter-attacking, speedy wingers fed by hard-working midfield",
+  "diverge": null
  },
  {
   "name": "Panama",
@@ -1225,7 +1437,9 @@ const TEAMS = [
   "qf": 1.0,
   "sf": 0.0,
   "fin": 0.0,
-  "win": 0.0
+  "win": 0.0,
+  "quote": "strong, high-scoring attacking side, direct",
+  "diverge": null
  }
 ];
 const DEFINITIONS = {
@@ -2336,6 +2550,24 @@ function renderProfile(el, t) {
   desc.textContent = DESCRIPTORS[t.archetype];
   el.appendChild(desc);
 
+  // Tactical citation (The Athletic, pre-tournament). Verbatim, with a divergence
+  // note where the guide's style read tensions with the goal-derived archetype.
+  const quote = document.createElement("p");
+  quote.className = "pquote";
+  quote.textContent = "“" + t.quote + "”";
+  const cite = document.createElement("span");
+  cite.className = "pcite";
+  cite.textContent = "— The Athletic";
+  quote.appendChild(cite);
+  el.appendChild(quote);
+
+  if (t.diverge) {
+    const dv = document.createElement("p");
+    dv.className = "pdiverge";
+    dv.textContent = t.diverge;
+    el.appendChild(dv);
+  }
+
   const table = document.createElement("table");
   const rows = [
     ["Group", t.group],
@@ -2593,6 +2825,187 @@ selB.addEventListener("change", renderAll);
 selA.value = "Spain";
 selB.value = "France";
 renderAll();
+
+/* ============ SECTION 5: KNOCKOUT BRACKET ============ */
+/* Structure 73-104 encoded from the verified WC2026 bracket map. It is NOT in
+   wc2026.db (which holds group-stage fixtures 1-72 only); the DB is read-only. */
+const KO_ROUNDS = [
+  { key:"R32", tab:"R32",   title:"Round of 32",    ids:[73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88] },
+  { key:"R16", tab:"R16",   title:"Round of 16",    ids:[89,90,91,92,93,94,95,96] },
+  { key:"QF",  tab:"QF",    title:"Quarter-finals", ids:[97,98,99,100] },
+  { key:"SF",  tab:"SF",    title:"Semi-finals",    ids:[101,102] },
+  { key:"F",   tab:"Final", title:"Final",          ids:[104] }
+];
+const KO_MATCHES = {
+  73:{a:{ru:"A",team:"South Africa"}, b:{ru:"B",team:"Canada"}},
+  74:{a:{w:"E",team:"Germany"}, b:{third:"ABCDF",team:"Paraguay"}},
+  75:{a:{w:"F",team:"Netherlands"}, b:{ru:"C",team:"Morocco"}},
+  76:{a:{w:"C",team:"Brazil"}, b:{ru:"F",team:"Japan"}},
+  77:{a:{w:"I",team:"France"}, b:{third:"CDFGH",team:"Sweden"}},
+  78:{a:{ru:"E",team:"Ivory Coast"}, b:{ru:"I",team:"Norway"}},
+  79:{a:{w:"A",team:"Mexico"}, b:{third:"CEFHI",team:"Ecuador"}},
+  80:{a:{w:"L",team:"England"}, b:{third:"EHIJK",team:"DR Congo"}},
+  81:{a:{w:"D",team:"United States"}, b:{third:"BEFIJ",team:"Bosnia and Herzegovina"}},
+  82:{a:{w:"G",team:"Belgium"}, b:{third:"AEHIJ",team:"Senegal"}},
+  83:{a:{ru:"K",team:"Portugal"}, b:{ru:"L",team:"Croatia"}},
+  84:{a:{w:"H",team:"Spain"}, b:{ru:"J",team:"Austria"}},
+  85:{a:{w:"B",team:"Switzerland"}, b:{third:"EFGIJ",team:"Algeria"}},
+  86:{a:{w:"J",team:"Argentina"}, b:{ru:"H",team:"Cape Verde"}},
+  87:{a:{w:"K",team:"Colombia"}, b:{third:"DEIJL",team:"Ghana"}},
+  88:{a:{ru:"D",team:"Australia"}, b:{ru:"G",team:"Egypt"}},
+  89:{a:{win:74},  b:{win:77}},
+  90:{a:{win:73},  b:{win:75}},
+  91:{a:{win:76},  b:{win:78}},
+  92:{a:{win:79},  b:{win:80}},
+  93:{a:{win:83},  b:{win:84}},
+  94:{a:{win:81},  b:{win:82}},
+  95:{a:{win:86},  b:{win:88}},
+  96:{a:{win:85},  b:{win:87}},
+  97:{a:{win:89},  b:{win:90}},
+  98:{a:{win:93},  b:{win:94}},
+  99:{a:{win:91},  b:{win:92}},
+  100:{a:{win:95}, b:{win:96}},
+  101:{a:{win:97}, b:{win:98}},
+  102:{a:{win:99}, b:{win:100}},
+  103:{a:{lose:101}, b:{lose:102}},
+  104:{a:{win:101}, b:{win:102}}
+};
+/* Settled outcomes. EMPTY until matches are played & FIFA confirms. Group stage
+   ends 27 Jun; no slot is settled today, so every side renders descriptor/TBD. */
+const KO_RESULTS = {};   // { matchId: { win:"Team Name", lose:"Team Name" } }
+
+function koSideLabel(side){
+  if (side.team) return resolveKoTeam(side.team);
+  if (side.w)     return { name:"Winner Group "+side.w, sub:"Group winner", settled:false };
+  if (side.ru)    return { name:"Group "+side.ru+" runner-up", sub:"Runner-up", settled:false };
+  if (side.third) return { name:"3rd place", sub:side.third.split("").join("·"), settled:false };
+  if (side.win){
+    const r = KO_RESULTS[side.win];
+    if (r && r.win) return resolveKoTeam(r.win);
+    return { name:"Winner Match "+side.win, sub:"To be decided", settled:false };
+  }
+  if (side.lose){
+    const r = KO_RESULTS[side.lose];
+    if (r && r.lose) return resolveKoTeam(r.lose);
+    return { name:"Loser Match "+side.lose, sub:"To be decided", settled:false };
+  }
+  return { name:"TBD", sub:"", settled:false };
+}
+function resolveKoTeam(name){
+  const t = TEAMS.find(x => x.name === name);
+  return t ? { name:t.name, sub:t.fifa, settled:true, team:t }
+           : { name:name, sub:"", settled:false };
+}
+
+const KO_SHIELD = '<svg class="ko-shield" viewBox="0 0 24 24" aria-hidden="true">'
+  + '<path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3z" fill="none" '
+  + 'stroke="currentColor" stroke-width="1.5"/></svg>';
+
+function koSideHTML(side){
+  const s = koSideLabel(side);
+  if (s.settled && s.team){
+    const t = s.team;
+    const pill = '<span class="arch-pill ko-pill" style="background:' + HEX[t.archetype]
+      + ';color:#fff;border-color:' + HEX[t.archetype] + '">' + displayName(t.archetype) + '</span>';
+    return '<div class="ko-side ko-side-team"><div class="ko-side-top"><span class="ko-chip">' + t.fifa + '</span>'
+      + '<span class="ko-name">' + t.name + '</span></div>' + pill + '</div>';
+  }
+  return '<div class="ko-side ko-tbd">' + KO_SHIELD
+    + '<span class="ko-text"><span class="ko-name">' + s.name + '</span>'
+    + (s.sub ? '<span class="ko-sub">' + s.sub + '</span>' : '') + '</span></div>';
+}
+
+function koClashHTML(m){
+  return "";   /* Fix 1: per-card NARRATIVES blurb removed (const kept for Section 4 explorer) */
+}
+
+function koCardHTML(id){
+  const m = KO_MATCHES[id];
+  const A = koSideLabel(m.a), B = koSideLabel(m.b);
+  const both = A.settled && B.settled && A.team && B.team;
+  const btn = both
+    ? '<button class="ko-full" onclick="openMatchup(\'' + A.team.name + '\',\'' + B.team.name + '\')">Full analysis</button>'
+    : '<button class="ko-full" disabled aria-disabled="true">Full analysis</button>';
+  return '<article class="ko-card" id="ko-m' + id + '">'
+    + '<div class="ko-head"><span class="ko-venue"></span><span class="ko-no">Match ' + id + '</span></div>'
+    + koSideHTML(m.a)
+    + '<div class="ko-vs">v</div>'
+    + koSideHTML(m.b)
+    + koClashHTML(m)
+    + '<div class="ko-foot"><span class="ko-lens">lens: data &middot; <span class="ko-read">read</span></span>'
+    + btn + '</div>'
+    + '</article>';
+}
+
+function openMatchup(aName, bName){
+  selA.value = aName; selB.value = bName; renderAll();
+  document.getElementById("explorer").scrollIntoView({ behavior:"smooth" });
+}
+
+function koBracketOrder(){
+  // Derive each round's column order by DFS from the Final, visiting feeder A
+  // then feeder B, so every downstream card sits between its TRUE feeders.
+  // No hand-typed sequence: order falls out of the KO_MATCHES {win:N} links.
+  const roundOf = {};
+  KO_ROUNDS.forEach(function(rd){ rd.ids.forEach(function(id){ roundOf[id] = rd.key; }); });
+  const buckets = {}; KO_ROUNDS.forEach(function(rd){ buckets[rd.key] = []; });
+  const ROOT = KO_ROUNDS[KO_ROUNDS.length - 1].ids[0];   // 104, the Final
+  (function visit(id){
+    if (id == null || !(id in roundOf)) return;
+    buckets[roundOf[id]].push(id);
+    const m = KO_MATCHES[id];
+    if (m.a && m.a.win != null) visit(m.a.win);
+    if (m.b && m.b.win != null) visit(m.b.win);
+  })(ROOT);
+  return buckets;
+}
+
+function renderBracket(){
+  const tree = document.getElementById("koTree");
+  const tabs = document.getElementById("koTabs");
+  const order = koBracketOrder();
+  tree.innerHTML = ""; tabs.innerHTML = "";
+  KO_ROUNDS.forEach((rd, i) => {
+    const tab = document.createElement("button");
+    tab.className = "ko-tab" + (i === 0 ? " active" : "");
+    tab.textContent = rd.tab;
+    tab.addEventListener("click", () => {
+      tabs.querySelectorAll(".ko-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      tree.children[i].scrollIntoView({ behavior:"smooth", inline:"start", block:"nearest" });
+    });
+    tabs.appendChild(tab);
+
+    const col = document.createElement("div");
+    col.className = "ko-round ko-" + rd.key.toLowerCase();
+    let inner = '<div class="ko-round-head">' + rd.title + '</div>'
+      + '<div class="ko-cards">'
+      + order[rd.key].map(koCardHTML).join("");
+    if (rd.key === "F") {   // group the third-place play-off under the Final (104)
+      inner += '<div class="ko-thirdgroup">'
+        + '<div class="ko-round-sub">Third-place play-off</div>'
+        + koCardHTML(103) + '</div>';
+    }
+    inner += '</div>';   // Fix 3: close .ko-cards wrapper (header stays a sibling above)
+    col.innerHTML = inner;
+    tree.appendChild(col);
+  });
+
+  if ("IntersectionObserver" in window){
+    const obs = new IntersectionObserver((ents) => {
+      ents.forEach(e => {
+        if (e.isIntersecting){
+          const idx = [].indexOf.call(tree.children, e.target);
+          tabs.querySelectorAll(".ko-tab").forEach((t, j) => t.classList.toggle("active", j === idx));
+        }
+      });
+    }, { root: tree, threshold: 0.6 });
+    [].forEach.call(tree.children, c => obs.observe(c));
+  }
+}
+
+renderBracket();
+
 </script>
 
 </body>
