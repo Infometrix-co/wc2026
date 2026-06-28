@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>48 teams. Only four ways to play.</title>
 <meta property="og:title" content="48 teams. Only four ways to play.">
-<meta property="og:description" content="Maestros, Controllers, Counter Kings, Warriors. Pick any two teams — see how the match unfolds, and why money doesn't always win. ⚽️💰 Squad values: Transfermarkt.">
+<meta property="og:description" content="Maestros, Controllers, Counter Kings, Warriors. Pick any two teams — see how the match unfolds, and why money doesn't always win. Squad values: Transfermarkt.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://infometrix-co.github.io/wc2026/">
 <meta property="og:image" content="https://infometrix-co.github.io/wc2026/og-image.png">
@@ -311,7 +311,7 @@
     font-weight: 700; cursor: pointer; white-space: nowrap; }
   #bracket .ko-tab.active { background: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
 
-  #bracket { --ko-card-h: 242px; }   /* Fix 2: single card-height constant; all KO geometry derives from this */
+  #bracket { --ko-card-h: 254px; }   /* Fix 2: single card-height constant; all KO geometry derives from this */
   #bracket .ko-cards { display: contents; }   /* mobile: transparent wrapper — layout identical to before */
   #bracket .ko-tree { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x proximity;
     padding: 16px 2px 10px; }
@@ -344,6 +344,11 @@
     text-transform: uppercase; letter-spacing: 0.1em; margin: 2px 0 2px 26px; }
   #bracket .ko-clash { font-size: 0.78rem; color: var(--ink-soft); margin-top: 6px;
     border-top: 1px dashed var(--border); padding-top: 6px; }
+  /* Step1-A opt2: squad value/ratio in the meta row (one line; never grows the card) */
+  #bracket .ko-value-meta { font-size: 0.66rem; font-weight: 700; color: var(--ink-soft);
+    min-width: 0; flex: 0 1 auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #bracket .ko-foot .ko-full { flex: 0 0 auto; }
+  #bracket .ko-money { color: #165280; }   /* both squad values NAVY; gold stays reserved for Maestros pills */
   #bracket .ko-foot { display: flex; align-items: center; justify-content: space-between;
     margin-top: auto; gap: 10px; }   /* Fix 2: meta row bottom-anchored => aligned buttons */
   #bracket .ko-lens { font-size: 0.66rem; color: var(--ink-muted); }
@@ -399,6 +404,39 @@
     #bracket .ko-f .ko-thirdgroup { position: absolute; left: 0; right: 0; top: 50%;
       margin-top: calc(var(--ko-card-h) / 2 + 36px);   /* Fix 2: derived — half a card below the centred Final */ }
   }
+  /* Step1 D: hook + jump */
+  #bracket .ko-hook { margin: 4px 0 10px; }
+  #bracket .ko-hook-line { font-size: 1.02rem; font-weight: 700; color: var(--ink);
+    line-height: 1.45; margin: 0 0 8px; }
+  #bracket .ko-jump { display: inline-block; font-size: 0.78rem; font-weight: 700;
+    color: var(--brand-blue); text-decoration: none; border: 1px solid var(--brand-blue);
+    border-radius: 999px; padding: 5px 14px; }
+  /* title style: thin full-width GOLD rule under the SECTION 5 — WIN OR DIE label
+     (recolours the label's existing border-bottom; a divider/underline, not a pill) */
+  #bracket .section-label { border-bottom: 2px solid #C99A1E; }
+  /* #3 flag beside code chip; #4 back-to-bracket control */
+  #bracket .ko-flag { font-size: 1.05rem; line-height: 1; flex: 0 0 auto; }
+  /* #3: back-to-bracket = ghost sibling of the CTA (same navy/shape/font, outlined not filled) */
+  #explorer .ko-back { display: inline-block; font-size: 0.9rem; font-weight: 700;
+    color: #165280; background: transparent; border: 1.5px solid #165280;
+    border-radius: 8px; padding: 9px 18px; text-decoration: none;
+    vertical-align: middle; margin: 0 8px 14px 0; }
+  #explorer .ko-back:hover { background: rgba(22,82,128,0.08); }
+  #explorer .cta { margin-top: 0; vertical-align: middle; }
+  /* Step1 B: odds table */
+  #explorer .odds-framing { font-size: 0.92rem; color: var(--ink-soft); line-height: 1.5; margin: 0 0 12px; }
+  #explorer .odds-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  #explorer .odds-table th, #explorer .odds-table td { padding: 5px 8px; border-bottom: 1px solid var(--border); text-align: left; }
+  #explorer .odds-table th { color: var(--ink-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  #explorer .odds-table .odc-num { text-align: right; font-variant-numeric: tabular-nums; }
+  #explorer .odds-table .odc-code { font-weight: 800; color: var(--ink-muted); font-size: 0.72rem; }
+  #explorer .odds-attr { font-size: 0.68rem; color: var(--ink-muted); margin: 10px 0 0; line-height: 1.4; }
+  /* DESKTOP foot clip fix: stack the value line (full width) above the full button */
+  @media (min-width: 1024px) {
+    #bracket .ko-foot { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 6px; }
+    #bracket .ko-foot .ko-value-meta { white-space: nowrap; overflow: visible; text-overflow: clip; }
+    #bracket .ko-foot .ko-full { align-self: flex-start; }
+  }
 </style>
 </head>
 <body>
@@ -409,16 +447,28 @@
   <p class="kicker">WC2026 — THE ARCHETYPE FRAMEWORK</p>
   <h1>48 teams. Only four ways to play.</h1>
   <p class="subtitle">Maestros, Controllers, Counter Kings, Warriors. Pick any two teams — see how the match unfolds, and why money doesn't always win.</p>
-  <p class="hero-stat">⚽️💰 France €1.5bn · Jordan €20m — a 75× gap in one tournament.</p>
+  <p class="hero-stat">France €1.52bn &middot; South Africa €49m &mdash; a 31&times; gap in market value.</p>
   <p class="standfirst">Built like a model, not a pundit's list: 48 teams classified from
   qualifying statistics, tactical analysis, and 1,245 verified player records — every
   classification traced to data, every uncertainty flagged.</p>
   <div class="stat-chips" id="statChips"></div>
-  <a class="cta" id="exploreCtaHero" href="#explorer">Pick any two teams — explore the matchup <span class="cta-arrow">→</span></a>
+  
   <hr>
 </header>
 
 <div class="live-strip" id="liveStrip" hidden></div>
+
+<!-- ============ SECTION 5 — KNOCKOUT BRACKET ============ -->
+<section id="bracket">
+  <div class="section-label">Section 5 &mdash; Win or Die</div>
+  <div class="ko-hook" id="section5">
+    <p class="ko-hook-line">Win or die &mdash; 32 teams, one game each, no second leg. This field runs from France&rsquo;s €1.52bn squad down to South Africa&rsquo;s €49m, a 31&times; gap in market value. Whose money holds up?</p>
+    <a class="ko-jump" href="#koTree">Jump to the bracket &darr;</a>
+  </div>
+  <p class="ko-intro">Round of 32 &rarr; Final. Swipe the tree left&ndash;right, or tap a round. The bracket is set from the group stage and FIFA&rsquo;s third-place routing; each tie carries the two squads&rsquo; market values. The Athletic&rsquo;s tournament odds are cited in the matchup analysis below as the market&rsquo;s view &mdash; the bracket itself forecasts no winner.</p>
+  <div class="ko-tabs" id="koTabs"></div>
+  <div class="ko-tree" id="koTree"></div>
+</section>
 
 <!-- ============ SECTION 1 — THE FRAMEWORK ============ -->
 <section id="framework">
@@ -470,12 +520,14 @@
   <p class="fx-subtitle" id="fxSubtitle">Times shown in your local timezone &middot; BST shown for reference &middot; Source: Wikipedia / FIFA match schedule</p>
   <div class="tabbar" id="fxTabs" role="tablist"></div>
   <div class="fixture-list" id="fxList"></div>
-  <a class="cta" id="exploreCta" href="#explorer">Pick any two teams — explore the matchup <span class="cta-arrow">→</span></a>
+  
 </section>
 
 <!-- ============ SECTION 3 — MATCHUP EXPLORER ============ -->
 <section id="explorer">
   <div class="section-label">Section 4 — Matchup Explorer</div>
+  <a class="ko-back" href="#section5">&larr; Back to bracket</a>
+  <a class="cta" id="exploreCtaHero" href="#explorer">Pick any two teams — explore the matchup <span class="cta-arrow">→</span></a>
 
   <div class="card winner-card" id="winnerCard">
     <h4>Predicted Winner</h4>
@@ -504,18 +556,51 @@
     <p class="placeholder">Pick two teams to see how their playing identities collide.</p>
   </div>
 
+  <div class="card odds-card" id="oddsCard">
+    <h4>Tournament odds &mdash; The Athletic</h4>
+    <p class="odds-framing">The Athletic won&#x27;t give 14 of these 32 nations a one-in-a-hundred shot — and they&#x27;re the 14 cheapest squads in the field. Among the 18 it does price, its odds track the wage bill closely (ρ = 0.84). This is the market&#x27;s bet: money decides. The archetype lens is the bet against it — and the World Cup settles which was right on 19 July, not on this page.</p>
+    <table class="odds-table"><thead><tr><th>Team</th><th class="odc-num">Squad value</th><th class="odc-num">Make final</th><th class="odc-num">Win</th></tr></thead>
+    <tbody>
+      <tr><td class="odc-team"><span class="odc-code">FRA</span> France</td><td class="odc-num">€1.52bn</td><td class="odc-num">32</td><td class="odc-num">21</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">ENG</span> England</td><td class="odc-num">€1.36bn</td><td class="odc-num">27</td><td class="odc-num">14</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">ESP</span> Spain</td><td class="odc-num">€1.22bn</td><td class="odc-num">25</td><td class="odc-num">16</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">POR</span> Portugal</td><td class="odc-num">€1.01bn</td><td class="odc-num">10</td><td class="odc-num">6</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">GER</span> Germany</td><td class="odc-num">€947m</td><td class="odc-num">7</td><td class="odc-num">3</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">BRA</span> Brazil</td><td class="odc-num">€928m</td><td class="odc-num">12</td><td class="odc-num">5</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">ARG</span> Argentina</td><td class="odc-num">€808m</td><td class="odc-num">34</td><td class="odc-num">17</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">NED</span> Netherlands</td><td class="odc-num">€754m</td><td class="odc-num">8</td><td class="odc-num">4</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">NOR</span> Norway</td><td class="odc-num">€590m</td><td class="odc-num">4</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">BEL</span> Belgium</td><td class="odc-num">€548m</td><td class="odc-num">7</td><td class="odc-num">3</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">CIV</span> Ivory Coast</td><td class="odc-num">€522m</td><td class="odc-num">2</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">SEN</span> Senegal</td><td class="odc-num">€478m</td><td class="odc-num">2</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">MAR</span> Morocco</td><td class="odc-num">€448m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">SWE</span> Sweden</td><td class="odc-num">€406m</td><td class="odc-num">&lt;1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">CRO</span> Croatia</td><td class="odc-num">€387m</td><td class="odc-num">2</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">USA</span> United States</td><td class="odc-num">€386m</td><td class="odc-num">3</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">ECU</span> Ecuador</td><td class="odc-num">€369m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">SUI</span> Switzerland</td><td class="odc-num">€332m</td><td class="odc-num">3</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">COL</span> Colombia</td><td class="odc-num">€302m</td><td class="odc-num">7</td><td class="odc-num">2</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">JPN</span> Japan</td><td class="odc-num">€271m</td><td class="odc-num">3</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">ALG</span> Algeria</td><td class="odc-num">€257m</td><td class="odc-num">2</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">AUT</span> Austria</td><td class="odc-num">€245m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">GHA</span> Ghana</td><td class="odc-num">€234m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">CAN</span> Canada</td><td class="odc-num">€199m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">MEX</span> Mexico</td><td class="odc-num">€192m</td><td class="odc-num">2</td><td class="odc-num">1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">PAR</span> Paraguay</td><td class="odc-num">€154m</td><td class="odc-num">&lt;1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">BIH</span> Bosnia and Herzegovina</td><td class="odc-num">€146m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">COD</span> DR Congo</td><td class="odc-num">€144m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">EGY</span> Egypt</td><td class="odc-num">€116m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">AUS</span> Australia</td><td class="odc-num">€77m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">CPV</span> Cape Verde</td><td class="odc-num">€54m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+      <tr><td class="odc-team"><span class="odc-code">RSA</span> South Africa</td><td class="odc-num">€49m</td><td class="odc-num">1</td><td class="odc-num">&lt;1</td></tr>
+    </tbody></table>
+    <p class="odds-attr">Odds: The Athletic forecast (snapshot 2026-06-28). Squad values: Transfermarkt. Percentages verbatim; &ldquo;&lt;1&rdquo; is The Athletic&rsquo;s published sub-1% hedge, not a rounded figure.</p>
+  </div>
+
 </section>
 
 
-<!-- ============ SECTION 5 — KNOCKOUT BRACKET ============ -->
-<section id="bracket">
-  <div class="section-label">Section 5 &mdash; Knockout Bracket</div>
-  <p class="ko-intro">Round of 32 &rarr; Final. Swipe the tree left&ndash;right, or tap a round.
-     Slots show qualification descriptors until the group stage and FIFA&rsquo;s third-place
-     ranking are final &mdash; no team is placed early, and no probabilities are shown here.</p>
-  <div class="ko-tabs" id="koTabs"></div>
-  <div class="ko-tree" id="koTree"></div>
-</section>
+
 
 <footer>
   Infometrix &middot; WC2026 &middot; Pedro Morcillo<br>
@@ -2106,6 +2191,7 @@ const COLORS = {
   "Counter Kings": "var(--punchers)",
   "Warriors":      "var(--warriors)"
 };
+const SQUAD_VALUES = {"ALG":256900000, "ARG":807500000, "AUS":77450000, "AUT":245200000, "BEL":547500000, "BIH":146400000, "BRA":928200000, "CAN":198650000, "CIV":522100000, "COD":143900000, "COL":302350000, "CPV":54500000, "CRO":387300000, "ECU":368700000, "EGY":116480000, "ENG":1360000000, "ESP":1220000000, "FRA":1520000000, "GER":947000000, "GHA":234350000, "JPN":270850000, "MAR":447700000, "MEX":191850000, "NED":754200000, "NOR":589900000, "PAR":153650000, "POR":1010000000, "RSA":49250000, "SEN":478100000, "SUI":332500000, "SWE":406080000, "USA":385650000};
 const HEX = {
   "Maestros": "#C99A1E", "Controllers": "#1D8A4E",
   "Counter Kings": "#C92F2F", "Warriors": "#1E5FD6"
@@ -2156,16 +2242,16 @@ const DESCRIPTORS = {
 };
 
 const NARRATIVES = {
-  "Maestros|Maestros": "Technical battle, midfield dominance decides.",
-  "Controllers|Maestros": "Possession war, margins razor-thin.",
-  "Counter Kings|Maestros": "The classic trap — Maestros dominate but one break kills them.",
-  "Maestros|Warriors": "Maestros should win but Warriors make it ugly.",
-  "Controllers|Controllers": "Tactical chess, likely 0-0 or 1-0.",
-  "Controllers|Counter Kings": "Counter Kings' dream matchup — space behind high line.",
-  "Controllers|Warriors": "War of attrition, defensive masterclass.",
-  "Counter Kings|Counter Kings": "Open game surprisingly, both want space.",
-  "Counter Kings|Warriors": "Counter Kings edge it — more offensive threat.",
-  "Warriors|Warriors": "0-0 until penalties."
+  "Maestros|Maestros": "Two technical sides contest midfield control.",
+  "Controllers|Maestros": "Possession against possession; fine margins in build-up.",
+  "Counter Kings|Maestros": "Patient Maestros control against the Counter Kings break.",
+  "Maestros|Warriors": "Maestros control against Warriors physical disruption.",
+  "Controllers|Controllers": "A patient, low-tempo tactical chess match.",
+  "Controllers|Counter Kings": "A high line against the threat of the space behind it.",
+  "Controllers|Warriors": "Patient build-up meets a disciplined defensive block.",
+  "Counter Kings|Counter Kings": "Both sides want space; a transition-led, open game.",
+  "Counter Kings|Warriors": "Counter-attacking threat against defensive resilience.",
+  "Warriors|Warriors": "Two physical, low-block sides; a tight, cagey contest."
 };
 
 // Archetype edge matrix: value for Team A archetype vs Team B archetype.
@@ -2574,7 +2660,7 @@ function renderProfile(el, t) {
     ["Confederation", t.conf],
     ["FIFA code", t.fifa],
     ["Advance prob (The Athletic)", t.r32.toFixed(0) + "%"],
-    ["Avg squad age", t.avgAge.toFixed(1)],
+    ["Avg squad age", t.avgAge.toFixed(1) + " yrs"],
     ["Classification basis", t.confidence]
   ];
   for (const [k, v] of rows) {
@@ -2775,7 +2861,7 @@ function renderWinner(a, b) {
 
   const disc = document.createElement("p");
   disc.className = "disclaimer";
-  disc.textContent = "⚠️ For illustration purposes only. This model combines " +
+  disc.textContent = "For illustration purposes only. This model combines " +
     "The Athletic tournament probabilities with archetype matchup logic derived from FBref " +
     "qualifying data and The Athletic tactical analysis. It is not a betting tool and " +
     "does not account for injuries, current form, or match context.";
@@ -2907,7 +2993,7 @@ function koSideHTML(side){
     const t = s.team;
     const pill = '<span class="arch-pill ko-pill" style="background:' + HEX[t.archetype]
       + ';color:#fff;border-color:' + HEX[t.archetype] + '">' + displayName(t.archetype) + '</span>';
-    return '<div class="ko-side ko-side-team"><div class="ko-side-top"><span class="ko-chip">' + t.fifa + '</span>'
+    return '<div class="ko-side ko-side-team"><div class="ko-side-top"><span class="ko-flag">' + flagEmoji(t.iso) + '</span><span class="ko-chip">' + t.fifa + '</span>'
       + '<span class="ko-name">' + t.name + '</span></div>' + pill + '</div>';
   }
   return '<div class="ko-side ko-tbd">' + KO_SHIELD
@@ -2917,6 +3003,21 @@ function koSideHTML(side){
 
 function koClashHTML(m){
   return "";   /* Fix 1: per-card NARRATIVES blurb removed (const kept for Section 4 explorer) */
+}
+
+function koValueMeta(m){   /* Step1-A opt2: value+ratio in the meta row; else the lens text */
+  const A=koSideLabel(m.a), B=koSideLabel(m.b);
+  if(A.settled&&B.settled&&A.team&&B.team){
+    const va=SQUAD_VALUES[A.team.fifa], vb=SQUAD_VALUES[B.team.fifa];
+    if(va!=null&&vb!=null){   /* render-if-present-else-omit; never a half-ratio */
+      const hi=Math.max(va,vb), lo=Math.min(va,vb), ratio=Math.round(hi/lo);
+      const richer=(va>=vb?A.team:B.team), poorer=(va>=vb?B.team:A.team);
+      const fmt=v=> v>=1e9 ? "\u20ac"+(v/1e9).toFixed(2)+"bn" : "\u20ac"+Math.round(v/1e6)+"m";
+      return '<span class="ko-value-meta" title="'+richer.name+' '+fmt(hi)+' vs '+poorer.name+' '+fmt(lo)+' ('+ratio+'\u00d7)">'
+        +'<span class="ko-money">'+fmt(hi)+'</span> &middot; &times;'+ratio+' &middot; <span class="ko-money">'+fmt(lo)+'</span></span>';
+    }
+  }
+  return "";   /* #3: unpopulated cards have no value to read \u2014 drop the lens cue */
 }
 
 function koCardHTML(id){
@@ -2932,7 +3033,7 @@ function koCardHTML(id){
     + '<div class="ko-vs">v</div>'
     + koSideHTML(m.b)
     + koClashHTML(m)
-    + '<div class="ko-foot"><span class="ko-lens">lens: data &middot; <span class="ko-read">read</span></span>'
+    + '<div class="ko-foot">' + koValueMeta(m)
     + btn + '</div>'
     + '</article>';
 }
