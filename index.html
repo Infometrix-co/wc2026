@@ -329,6 +329,7 @@
   #bracket .ko-head { display: flex; justify-content: space-between; align-items: baseline;
     font-size: 0.68rem; color: var(--ink-muted); margin-bottom: 6px; min-height: 14px; }
   #bracket .ko-no { font-weight: 700; font-variant-numeric: tabular-nums; }
+  #bracket .ko-final-tag { display: none; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }   /* in-card FINAL tag; shown only <1024px */
   #bracket .ko-side { display: flex; align-items: center; gap: 8px; padding: 4px 0; min-height: 26px; }
   #bracket .ko-shield { width: 18px; height: 18px; color: var(--ink-muted); flex: 0 0 auto; }
   #bracket .ko-chip { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.03em;
@@ -394,6 +395,11 @@
     /* step 2: SVG connector overlay — scrolls with the columns, sits behind card bodies */
     #bracket .ko-tree { position: relative; z-index: 0; }
     #bracket #koConnectors { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 0; }
+    /* in-card FINAL label (mobile only): show the tag + gold star, and hide the now-duplicate Final
+       column header (visibility:hidden keeps its box so the M104 centring + connectors are unchanged). */
+    #bracket .ko-final-tag { display: inline; }
+    #bracket .ko-final-tag::after { content: "\2605"; color: #C99A1E; margin-left: 5px; }
+    #bracket .ko-f .ko-round-head { visibility: hidden; }
   }
 
   /* ---------- SECTION 5: DESKTOP TREE — left->right, no scroll, no connector lines ---------- */
@@ -2937,6 +2943,7 @@ const KO_ROUNDS = [
   { key:"SF",  tab:"SF",    title:"Semi-finals",    ids:[101,102] },
   { key:"F",   tab:"Final", title:"Final",          ids:[104] }
 ];
+const KO_FINAL_ID = KO_ROUNDS[KO_ROUNDS.length - 1].ids[0];   // 104 — derived (matches koBracketOrder), not hardcoded
 const KO_MATCHES = {
   73:{a:{ru:"A",team:"South Africa"}, b:{ru:"B",team:"Canada"}},
   74:{a:{w:"E",team:"Germany"}, b:{third:"ABCDF",team:"Paraguay"}},
@@ -3043,7 +3050,7 @@ function koCardHTML(id){
     ? '<button class="ko-full" onclick="openMatchup(\'' + A.team.name + '\',\'' + B.team.name + '\')">Full analysis</button>'
     : '<button class="ko-full" disabled aria-disabled="true">Full analysis</button>';
   return '<article class="ko-card" id="ko-m' + id + '">'
-    + '<div class="ko-head"><span class="ko-venue"></span><span class="ko-no">Match ' + id + '</span></div>'
+    + '<div class="ko-head"><span class="ko-venue">' + (id === KO_FINAL_ID ? '<span class="ko-final-tag">Final</span>' : '') + '</span><span class="ko-no">Match ' + id + '</span></div>'
     + koSideHTML(m.a)
     + '<div class="ko-vs">v</div>'
     + koSideHTML(m.b)
