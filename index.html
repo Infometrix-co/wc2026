@@ -345,6 +345,9 @@
   #bracket .ko-side-team .arch-pill.ko-pill { margin-left: 0; }
   #bracket .ko-vs { font-size: 0.62rem; font-weight: 700; color: var(--ink-muted);
     text-transform: uppercase; letter-spacing: 0.1em; margin: 2px 0 2px 26px; }
+  #bracket .ko-vs-score { color: var(--ink); text-transform: none; letter-spacing: 0; }   /* score replaces the "v" (height-neutral) */
+  #bracket .ko-score { font-size: 0.9rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  #bracket .ko-pens { font-size: 0.62rem; font-weight: 600; color: var(--ink-muted); }
   #bracket .ko-clash { font-size: 0.78rem; color: var(--ink-soft); margin-top: 6px;
     border-top: 1px dashed var(--border); padding-top: 6px; }
   /* Step1-A opt2: squad value/ratio in the meta row (one line; never grows the card) */
@@ -2980,7 +2983,12 @@ const KO_MATCHES = {
 };
 /* Settled outcomes. EMPTY until matches are played & FIFA confirms. Group stage
    ends 27 Jun; no slot is settled today, so every side renders descriptor/TBD. */
-const KO_RESULTS = {};   // { matchId: { win:"Team Name", lose:"Team Name" } }
+const KO_RESULTS = {
+  73:{win:"Canada",   lose:"South Africa", score:"1-0"},
+  74:{win:"Paraguay", lose:"Germany",      score:"1-1", pens:"4-3"},
+  75:{win:"Morocco",  lose:"Netherlands",  score:"1-1", pens:"3-2"},
+  76:{win:"Brazil",   lose:"Japan",        score:"2-1"}
+};   // { matchId: { win:"Team Name", lose:"Team Name", score:"2-1", pens?:"4-3" } }
 
 function koSideLabel(side){
   if (side.team) return resolveKoTeam(side.team);
@@ -3042,6 +3050,19 @@ function koValueMeta(m){   /* Step1-A opt2: value+ratio in the meta row; else th
   return "";   /* #3: unpopulated cards have no value to read \u2014 drop the lens cue */
 }
 
+function koScoreHTML(id){
+  const r = KO_RESULTS[id];
+  if (!r || !r.score) return '<div class="ko-vs">v</div>';   /* not played -> keep the "v" divider */
+  const dash = s => s.replace("-", "–");                /* stored plain "2-1" -> rendered "2–1" */
+  let pens = "";
+  if (r.pens){
+    const wt = TEAMS.find(x => x.name === r.win);            /* winner FIFA code, same source as the team chip */
+    const code = wt ? wt.fifa : r.win;                       /* fall back to full name if absent; never hardcode */
+    pens = ' <span class="ko-pens">(' + code + ' win ' + dash(r.pens) + ' pens)</span>';
+  }
+  return '<div class="ko-vs ko-vs-score"><span class="ko-score">' + dash(r.score) + '</span>' + pens + '</div>';
+}
+
 function koCardHTML(id){
   const m = KO_MATCHES[id];
   const A = koSideLabel(m.a), B = koSideLabel(m.b);
@@ -3052,7 +3073,7 @@ function koCardHTML(id){
   return '<article class="ko-card" id="ko-m' + id + '">'
     + '<div class="ko-head"><span class="ko-venue">' + (id === KO_FINAL_ID ? '<span class="ko-final-tag">Final</span>' : '') + '</span><span class="ko-no">Match ' + id + '</span></div>'
     + koSideHTML(m.a)
-    + '<div class="ko-vs">v</div>'
+    + koScoreHTML(id)
     + koSideHTML(m.b)
     + koClashHTML(m)
     + '<div class="ko-foot">' + koValueMeta(m)
