@@ -3043,11 +3043,10 @@ function koValueMeta(m){   /* Step1-A opt2: value+ratio in the meta row; else th
   if(A.settled&&B.settled&&A.team&&B.team){
     const va=SQUAD_VALUES[A.team.fifa], vb=SQUAD_VALUES[B.team.fifa];
     if(va!=null&&vb!=null){   /* render-if-present-else-omit; never a half-ratio */
-      const hi=Math.max(va,vb), lo=Math.min(va,vb), ratio=Math.round(hi/lo);
-      const richer=(va>=vb?A.team:B.team), poorer=(va>=vb?B.team:A.team);
+      const ratio=Math.round(Math.max(va,vb)/Math.min(va,vb));   /* ratio is order-independent */
       const fmt=v=> v>=1e9 ? "\u20ac"+(v/1e9).toFixed(2)+"bn" : "\u20ac"+Math.round(v/1e6)+"m";
-      return '<span class="ko-value-meta" title="'+richer.name+' '+fmt(hi)+' vs '+poorer.name+' '+fmt(lo)+' ('+ratio+'\u00d7)">'
-        +'<span class="ko-money">'+fmt(hi)+'</span> &middot; &times;'+ratio+' &middot; <span class="ko-money">'+fmt(lo)+'</span></span>';
+      return '<span class="ko-value-meta" title="'+A.team.name+' '+fmt(va)+' vs '+B.team.name+' '+fmt(vb)+' ('+ratio+'\u00d7)">'
+        +'<span class="ko-money">'+fmt(va)+'</span> &middot; &times;'+ratio+' &middot; <span class="ko-money">'+fmt(vb)+'</span></span>';
     }
   }
   return "";   /* #3: unpopulated cards have no value to read \u2014 drop the lens cue */
