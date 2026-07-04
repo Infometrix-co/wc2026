@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WC2026 — Goals, Money, Survival · Infometrix</title>
+<!-- Built by build_analysis_v3.py · sources: wc2026.db + ko_analysis.csv (md5 fe747c00c9fb77271cece666944b5b02) + wc2026_team_signatures_48.csv · no retyped figures -->
+<style>
+  :root{
+    --navy:#165280; --navy-deep:#0e3a5c; --ink:#16232c; --paper:#ffffff; --paper-2:#f2f5f7;
+    --gold:#C99A1E; --green:#1D8A4E; --red:#C92F2F; --blue:#1E5FD6;
+    --f-alive:#165280; --f-r32:#B0745A; --f-grp:#8F969E;
+    --pitch:#5C8A3C;
+    --line:#dfe5ea; --muted:#5c6b73;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"Iowan Old Style",Palatino,"Palatino Linotype",Georgia,serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+  .mono{font-family:"SFMono-Regular",ui-monospace,"Cascadia Mono",Menlo,Consolas,monospace}
+
+  .site-tabs{display:flex;justify-content:center;gap:0;padding:14px 0 0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .site-tabs a{font-size:13.5px;font-weight:600;letter-spacing:.04em;text-decoration:none;
+    color:var(--navy);padding:9px 26px;border:1px solid var(--line);background:var(--paper)}
+  .site-tabs a:first-child{border-radius:8px 0 0 8px;border-right:0}
+  .site-tabs a:last-child{border-radius:0 8px 8px 0}
+  .site-tabs a.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+  header{background:var(--paper);position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero{max-width:1060px;margin:0 auto;padding:54px 20px 56px;position:relative;z-index:2}
+  .brand{font-family:-apple-system,sans-serif;font-weight:700;
+    letter-spacing:.14em;font-size:13px;text-transform:uppercase;color:var(--navy);display:flex;gap:10px;align-items:center}
+  .brand b{color:var(--gold)}
+  .eyebrow{font-family:-apple-system,sans-serif;text-transform:uppercase;letter-spacing:.18em;
+    font-size:12px;color:var(--muted);margin:34px 0 14px;font-weight:600}
+  h1{font-size:clamp(32px,5.6vw,58px);line-height:1.06;font-weight:300;letter-spacing:-.015em;max-width:22ch;color:var(--navy-deep)}
+  h1 em{font-style:normal;color:var(--gold)}
+  .dek{font-size:clamp(17px,2.4vw,20px);max-width:58ch;margin-top:20px;color:#37474f;line-height:1.55}
+  .pitchbg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+  .pitch-m{display:none}
+  .prog{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin-top:28px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  .prog .pg{font-size:15px;font-weight:600;color:var(--navy)}
+  .prog .pg small{font-weight:400;color:var(--muted);font-size:12px}
+  .prog .chev{color:var(--gold);font-size:13px;font-weight:700}
+  .prog .tail{color:var(--muted);font-size:12.5px;margin-left:8px}
+  /* centre circle dropped on mobile: harness measured it colliding with the dek
+     bounding box at 390px and 402px (round-3 rule: kept only if collision-free) */
+  .pc-m{display:none}
+  @media(max-width:640px){
+    .pitch-d{display:none}
+    .pitch-m{display:block}
+    .hero{padding-top:88px}
+    .hero h1{max-width:82%}
+    .hero .dek{max-width:72%}
+    .credo{max-width:70%}
+    .prog{display:inline-flex}
+    .prog .tail{flex-basis:100%;margin-left:0}
+  }
+  .credo{margin-top:30px;font-family:-apple-system,sans-serif;font-size:13px;letter-spacing:.03em;
+    color:var(--muted);border-left:2px solid var(--gold);padding-left:14px}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+    border-bottom:1px solid var(--line)}
+  .stat{background:var(--paper);padding:26px 22px}
+  .stat .n{font-family:-apple-system,sans-serif;font-size:clamp(30px,4.6vw,44px);font-weight:300;letter-spacing:-.02em;color:var(--navy);line-height:1}
+  .stat .l{font-family:-apple-system,sans-serif;font-size:13px;color:var(--muted);margin-top:9px;line-height:1.45}
+  .stat .l b{color:var(--ink)}
+  @media(max-width:720px){.stats{grid-template-columns:1fr}}
+
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  .finding-no{font-family:-apple-system,sans-serif;font-weight:700;font-size:12px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--gold)}
+  h2{font-size:clamp(25px,3.4vw,36px);font-weight:400;letter-spacing:-.01em;margin:8px 0 6px;line-height:1.12;max-width:26ch;color:var(--navy-deep)}
+  h3{font-weight:400}
+  .lede{font-size:18px;color:#374a54;max-width:60ch;margin-top:12px}
+  p.body{max-width:62ch;margin-top:16px;color:#25373f;font-size:17px}
+
+  .tag{display:inline-block;font-family:-apple-system,sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--gold);background:rgba(201,154,30,.12);padding:3px 9px;border-radius:20px;vertical-align:2px}
+  .tag-pre{color:#fff;background:var(--navy)}
+
+  .panel{background:#fff;border:1px solid var(--line);border-radius:6px;padding:24px 22px 20px;margin-top:26px;
+    box-shadow:0 1px 2px rgba(22,35,44,.04)}
+  .panel h3{font-family:-apple-system,sans-serif;font-size:13.5px;font-weight:400;letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+  .panel .sub{font-family:-apple-system,sans-serif;font-size:12.5px;color:var(--muted);margin-top:4px;max-width:78ch}
+  .legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;font-family:-apple-system,sans-serif;font-size:12.5px}
+  .legend .lg{display:inline-flex;align-items:center;gap:7px;color:var(--ink);cursor:pointer;
+    padding:3px 9px;border-radius:20px;border:1px solid transparent;user-select:none}
+  .legend .lg.dim{opacity:.35}
+  .legend .lg:hover{border-color:var(--line);background:var(--paper-2)}
+  .legend .fixed{cursor:default;color:var(--muted)}
+  .legend .fixed:hover{border-color:transparent;background:none}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block;flex:0 0 auto}
+  .diamond{width:10px;height:10px;display:inline-block;transform:rotate(45deg);flex:0 0 auto}
+
+  .controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-top:16px;font-family:-apple-system,sans-serif}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper-2)}
+  .seg button{font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:600;letter-spacing:.02em;
+    padding:8px 14px;border:0;background:transparent;color:var(--muted);cursor:pointer;transition:background .2s,color .2s}
+  .seg button.on{background:var(--navy);color:#fff}
+  .chk{display:inline-flex;align-items:center;gap:7px;font-family:-apple-system,sans-serif;font-size:12.5px;color:var(--ink);cursor:pointer;user-select:none}
+  .chk input{accent-color:var(--navy);width:15px;height:15px;cursor:pointer}
+  .pt.dimmed circle{opacity:.35}
+  .pt.dimmed text{opacity:.3}
+  .feat{margin-top:18px;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:6px;
+    padding:16px 18px;background:var(--paper-2);font-family:-apple-system,sans-serif;max-width:640px}
+  .feat .feat-tag{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .feat h4{font-weight:400;font-size:17px;color:var(--navy-deep);margin-top:6px}
+  .feat p{font-size:13.5px;color:#2c3e48;margin-top:8px;line-height:1.6}
+
+  .scatter-wrap{position:relative}
+  svg.chart{width:100%;height:auto;display:block;font-family:-apple-system,sans-serif;touch-action:manipulation}
+  .axis-label{font-size:12px;fill:var(--muted)}
+  .grid-line{stroke:#e8edf1;stroke-width:1}
+  .quad-line{stroke:#b6c2cb;stroke-width:1.4;stroke-dasharray:5 4}
+  .fit-line{stroke:var(--navy);stroke-width:2.5;stroke-dasharray:3 7;stroke-linecap:round;opacity:0;transition:opacity .8s}
+  .quad-tag{font-size:11px;font-weight:700;letter-spacing:.12em;opacity:.55}
+  .diag-tag{font-size:11.5px;font-weight:600;fill:var(--muted)}
+  .pt{cursor:pointer}
+  .pt circle,.pt rect{transition:fill .6s,opacity .45s;stroke:#fff;stroke-width:1.4}
+  .pt text{font-size:8.5px;font-weight:700;fill:#3c4a52;pointer-events:none;
+    paint-order:stroke;stroke:rgba(255,255,255,.9);stroke-width:3px}
+  .pt:hover circle,.pt:hover rect,.pt.pinned circle,.pt.pinned rect{stroke:#16232c;stroke-width:2.2}
+  .pt.faded circle,.pt.faded rect{opacity:.12}
+  .pt.faded text{opacity:.15}
+  .callout-line{stroke:#16232c;stroke-width:1.1;opacity:.6}
+  .callout-text{font-size:11px;font-weight:700;fill:#16232c}
+  .callout-sub{font-size:10px;fill:var(--muted)}
+  .tip{position:absolute;pointer-events:none;background:var(--ink);color:#fff;border-radius:6px;
+    padding:10px 13px;font-family:-apple-system,sans-serif;font-size:12.5px;line-height:1.55;opacity:0;
+    transition:opacity .12s;z-index:5;max-width:240px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .tip b{color:var(--gold)}
+  .tip .st{display:inline-block;margin-top:4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;
+    text-transform:uppercase;padding:1px 7px;border-radius:10px;background:rgba(255,255,255,.16)}
+  .tip-hint{font-family:-apple-system,sans-serif;font-size:11.5px;color:var(--muted);margin-top:10px}
+
+  .g-row{display:grid;grid-template-columns:minmax(150px,220px) 1fr 64px;align-items:center;gap:10px;margin:5px 0;
+    font-family:-apple-system,sans-serif}
+  .g-row .nm{font-size:13px;font-weight:600;text-align:right;line-height:1.25}
+  .g-row .nm small{color:var(--muted);font-weight:400}
+  .g-track{background:var(--paper-2);height:15px;border-radius:2px;overflow:hidden}
+  .g-bar{height:100%;width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+  .g-row .gv{font-weight:700;font-size:13.5px;text-align:left;color:var(--ink)}
+  .g-row .gv small{color:var(--muted);font-weight:400;font-size:10.5px}
+  .pens-chip{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--red);border:1px solid var(--red);border-radius:9px;padding:0 6px;margin-left:5px;vertical-align:1px;white-space:nowrap}
+  @media(max-width:640px){.g-row{grid-template-columns:minmax(112px,132px) 1fr 58px}.g-row .nm{font-size:11.5px}}
+
+  table.data{width:100%;border-collapse:collapse;margin-top:8px;font-family:-apple-system,sans-serif}
+  table.data th,table.data td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);font-size:13.5px;white-space:nowrap}
+  table.data th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+  table.data td small{color:var(--muted)}
+  table.data td.ok{color:var(--green);font-weight:600}
+  table.data td.no{color:var(--red);font-weight:600}
+  .dtab{margin-top:14px;font-family:-apple-system,sans-serif}
+  .dtab summary{font-size:12.5px;color:var(--navy);cursor:pointer;font-weight:600}
+  .dtab-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .prereg{background:#f4f8fb}
+  .qblock{background:#fff;border:1px solid #cfdeeb;border-radius:6px;padding:22px;margin-top:22px}
+  .qblock h3{font-family:-apple-system,sans-serif;font-size:15px;font-weight:400;color:var(--navy-deep)}
+  .qblock h3 b{font-weight:700;color:var(--navy)}
+  .qblock p{font-family:-apple-system,sans-serif;font-size:14.5px;color:#2c3e48;margin-top:9px;max-width:72ch;line-height:1.6}
+  .qblock ul{font-family:-apple-system,sans-serif;font-size:14px;color:#2c3e48;margin:10px 0 0 20px;line-height:1.7}
+  .chip-x{display:inline-block;font-family:-apple-system,sans-serif;font-size:12.5px;font-weight:600;color:var(--ink);
+    background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:4px 12px;margin:6px 6px 0 0}
+  .chip-x small{color:var(--muted);font-weight:400}
+  .qscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .note{background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:16px 18px;
+    margin-top:20px;font-family:-apple-system,sans-serif;font-size:13.5px;color:#35454d;line-height:1.6}
+  .note b{color:var(--ink)}
+  .note a{color:var(--navy)}
+
+  .disclosure{background:var(--paper-2)}
+  .disclosure .box{border-left:3px solid var(--gold);padding-left:20px;max-width:76ch}
+  .disclosure p{font-family:-apple-system,sans-serif;font-size:14.5px;color:#35454d;margin-top:12px;line-height:1.65}
+  .disclosure b{color:var(--ink)}
+
+  footer{background:var(--ink);color:#c8cfd3;padding:48px 0 56px;font-family:-apple-system,sans-serif}
+  footer h3{color:#fff;font-size:15px;letter-spacing:.02em;font-weight:400}
+  .src{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:22px}
+  .src .s .t{color:#fff;font-weight:700;font-size:13.5px}
+  .src .s .d{font-size:12.5px;color:#96a3aa;margin-top:5px;line-height:1.5}
+  @media(max-width:720px){.src{grid-template-columns:1fr 1fr}}
+  .method{margin-top:32px;font-size:12.5px;color:#859aa6;line-height:1.6;max-width:74ch}
+  .method b{color:#cdd6db}
+  .foot-meta{margin-top:26px;padding-top:20px;border-top:1px solid #2a3b45;font-size:11.5px;color:#6d7f89;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+    .g-bar{transition:none}
+    .pt circle,.pt rect{transition:fill .01s}
+  }
+  a{color:var(--navy)}
+</style>
+</head>
+<body>
+
+<nav class="site-tabs" aria-label="Site sections">
+  <a href="index.html">Matches</a><a href="analysis.html" class="on" aria-current="page">Analysis</a>
+</nav>
+
+<header>
+  <!-- DESKTOP pitch: horizontal full pitch, both penalty areas, Ds bulge inward -->
+  <svg class="pitchbg pitch-d" id="pitch-d" viewBox="0 0 1060 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <!-- D clip band: strictly BETWEEN the two penalty areas (x 482..942) -->
+      <clipPath id="bandD"><rect x="482" y="12" width="460" height="436"/></clipPath>
+      <clipPath id="clipPitchD"><rect x="376" y="12" width="672" height="436"/></clipPath>
+      <marker id="arrheadD" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#C99A1E"/>
+      </marker>
+    </defs>
+    <!-- pitch line art: texture only, never a data colour -->
+    <g stroke="var(--pitch)" stroke-opacity=".15" stroke-width="1.5" fill="none">
+      <rect class="pbound" x="376" y="12" width="672" height="436"/>
+      <line x1="712" y1="12" x2="712" y2="448"/>
+      <circle class="pc" cx="712" cy="230" r="58.6"/>
+      <rect class="pa" x="942" y="101" width="106" height="258"/>
+      <rect class="six" x="1013" y="171" width="35" height="118"/>
+      <circle class="darc" cx="977.6" cy="230" r="58.6" clip-path="url(#bandD)"/>
+      <rect class="pa" x="376" y="101" width="106" height="258"/>
+      <rect class="six" x="376" y="171" width="35" height="118"/>
+      <circle class="darc" cx="446.4" cy="230" r="58.6" clip-path="url(#bandD)"/>
+      <g clip-path="url(#clipPitchD)">
+        <circle cx="376" cy="12" r="6.4"/><circle cx="1048" cy="12" r="6.4"/>
+        <circle cx="376" cy="448" r="6.4"/><circle cx="1048" cy="448" r="6.4"/>
+      </g>
+    </g>
+    <g fill="var(--pitch)" fill-opacity=".15" stroke="none">
+      <circle class="pc" cx="712" cy="230" r="2.5"/>
+      <circle class="pspot" cx="977.6" cy="230" r="2.5"/>
+      <circle class="pspot" cx="446.4" cy="230" r="2.5"/>
+    </g>
+    <!-- trajectory pass: launched from the left penalty area, threaded through the
+         measured headline/dek corridor (svg y 217..231 at 1440/2360), to the edge of the right D -->
+    <path class="traj" d="M 400 224 Q 660 226 913 230" stroke="#C99A1E" stroke-width="3"
+      stroke-dasharray="0.5 11" stroke-linecap="round" fill="none" opacity=".55"
+      marker-end="url(#arrheadD)"/>
+  </svg>
+  <!-- MOBILE pitch: portrait full pitch, penalty areas top + bottom, Ds bulge inward -->
+  <svg class="pitchbg pitch-m" id="pitch-m" viewBox="0 0 460 700" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+    <defs>
+      <!-- D clip band: strictly BETWEEN the two penalty areas (y 120..580) -->
+      <clipPath id="bandM"><rect x="12" y="120" width="436" height="460"/></clipPath>
+      <clipPath id="clipPitchM"><rect x="12" y="14" width="436" height="672"/></clipPath>
+      <marker id="arrheadM" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+        <path d="M0,0 L8,4 L0,8 z" fill="#C99A1E"/>
+      </marker>
+    </defs>
+    <g stroke="var(--pitch)" stroke-opacity=".15" stroke-width="1.5" fill="none">
+      <rect class="pbound" x="12" y="14" width="436" height="672"/>
+      <line x1="12" y1="350" x2="448" y2="350"/>
+      <circle class="pc-m" cx="230" cy="350" r="58.6"/>
+      <rect class="pa" x="101" y="14" width="258" height="106"/>
+      <rect class="six" x="171" y="14" width="118" height="35"/>
+      <circle class="darc" cx="230" cy="84.4" r="58.6" clip-path="url(#bandM)"/>
+      <rect class="pa" x="101" y="580" width="258" height="106"/>
+      <rect class="six" x="171" y="651" width="118" height="35"/>
+      <circle class="darc" cx="230" cy="615.6" r="58.6" clip-path="url(#bandM)"/>
+      <g clip-path="url(#clipPitchM)">
+        <circle cx="12" cy="14" r="6.4"/><circle cx="448" cy="14" r="6.4"/>
+        <circle cx="12" cy="686" r="6.4"/><circle cx="448" cy="686" r="6.4"/>
+      </g>
+    </g>
+    <g fill="var(--pitch)" fill-opacity=".15" stroke="none">
+      <circle class="pc-m" cx="230" cy="350" r="2.5"/>
+      <circle class="pspot" cx="230" cy="84.4" r="2.5"/>
+      <circle class="pspot" cx="230" cy="615.6" r="2.5"/>
+    </g>
+    <!-- trajectory: up the pitch — launched inside the bottom box, rising in the
+         right-side whitespace corridor, terminating at the edge of the top D -->
+    <path class="traj" d="M 340 650 C 435 585 438 500 428 440 C 418 370 410 300 396 258 Q 352 182 272 130"
+      stroke="#C99A1E" stroke-width="3"
+      stroke-dasharray="0.5 11" stroke-linecap="round" fill="none" opacity=".55"
+      marker-end="url(#arrheadM)"/>
+  </svg>
+  <div class="hero">
+    <div class="brand">infometrix <span style="opacity:.5">·</span> <b>WC2026</b></div>
+    <div class="eyebrow">Data journalism · Round of 32 complete · 48 teams, 88 matches, no averages hiding</div>
+    <h1>Nobody in the knockouts paid less per goal than <em>Cape Verde</em>.</h1>
+    <p class="dek">The knockout has started killing teams, so we read the tournament goals-first: who created chances, who converted them, who survived — and what money had to do with each. The standing money map follows the conversion story with the fates painted on, and our five pre-registered questions get their answers, computed straight from the database.</p>
+    <div class="credo mono">dato mata relato — every figure computed from source at build time. No forecasts, no invented data.</div>
+    <div class="prog" aria-label="Tournament progression">
+      <span class="pg">48 <small>groups</small></span><span class="chev">❯</span>
+      <span class="pg">32 <small>knockout</small></span><span class="chev">❯</span>
+      <span class="pg">16 <small>alive today</small></span>
+      <span class="tail">32 gone · 3 on penalties</span>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="n">13 of 16</div><div class="l"><b>Round-of-32 ties won by the richer squad.</b> The price ladder kept deciding — with three escapes.</div></div>
+  <div class="stat"><div class="n">1</div><div class="l"><b>Upset under our frozen definition</b> (winner worth less than half the loser). It needed penalties.</div></div>
+  <div class="stat"><div class="n">3 of 16</div><div class="l"><b>Ties decided from the spot.</b> A shootout is closer to a coin flip than a verdict — flagged in every table below.</div></div>
+</div>
+
+<!-- ACT 1 — the conversion gap -->
+<section class="wrap reveal" id="act1-sec">
+  <div class="finding-no">Act 1 · exploratory — goals lens</div>
+  <h2>The conversion gap</h2>
+  <p class="lede">Creating chances and scoring them are different skills. Every team below the dashed line scored less than its chances were worth; the further below, the more it burned.</p>
+
+  <div class="panel scatter-wrap">
+    <h3>Chances created vs goals scored — all 48 teams, group stage</h3>
+    <div class="sub">X: xG created per match · Y: goals per match (goals ÷ 3) · colour: how far each team eventually got · n = 48 · tap a dot to pin its numbers</div>
+    <div class="tip" id="tip-act1"></div>
+    <svg class="chart" id="act1" viewBox="0 0 760 520" role="img" aria-label="Scatter of all 48 teams: group-stage expected goals created per match against goals scored per match, with a dashed diagonal marking one goal per expected goal, coloured by tournament fate."></svg>
+    <div class="legend" id="lg-act1">
+      <span class="lg" data-f="alive"><i class="dot" style="background:var(--f-alive)"></i>Alive in R16</span>
+      <span class="lg" data-f="r32"><i class="dot" style="background:var(--f-r32)"></i>Died in R32</span>
+      <span class="lg" data-f="groups"><i class="dot" style="background:var(--f-grp)"></i>Died in groups</span>
+      <span class="lg fixed">— — honest conversion: one goal per xG</span>
+      <span class="lg fixed">click a chip to isolate a fate</span>
+    </div>
+    <details class="dtab"><summary>Data table</summary><div class="dtab-scroll"><table class="data"><thead><tr><th>Team</th><th>xG/match</th><th>Goals/match</th><th>Group goals</th><th>Fate</th></tr></thead><tbody><tr><td>Canada</td><td>2.50</td><td>2.67</td><td>8</td><td>Alive in R16</td></tr><tr><td>Brazil</td><td>2.45</td><td>2.33</td><td>7</td><td>Alive in R16</td></tr><tr><td>Belgium</td><td>2.26</td><td>2.00</td><td>6</td><td>Alive in R16</td></tr><tr><td>Germany</td><td>2.25</td><td>3.33</td><td>10</td><td>Died in R32</td></tr><tr><td>Turkey</td><td>2.19</td><td>1.00</td><td>3</td><td>Died in groups</td></tr><tr><td>Norway</td><td>2.14</td><td>2.67</td><td>8</td><td>Alive in R16</td></tr><tr><td>Switzerland</td><td>2.12</td><td>2.33</td><td>7</td><td>Alive in R16</td></tr><tr><td>England</td><td>2.04</td><td>2.00</td><td>6</td><td>Alive in R16</td></tr><tr><td>Morocco</td><td>2.04</td><td>2.00</td><td>6</td><td>Alive in R16</td></tr><tr><td>France</td><td>1.99</td><td>3.33</td><td>10</td><td>Alive in R16</td></tr><tr><td>Argentina</td><td>1.99</td><td>2.67</td><td>8</td><td>Alive in R16</td></tr><tr><td>Spain</td><td>1.75</td><td>1.67</td><td>5</td><td>Alive in R16</td></tr><tr><td>Netherlands</td><td>1.75</td><td>3.33</td><td>10</td><td>Died in R32</td></tr><tr><td>Senegal</td><td>1.75</td><td>2.67</td><td>8</td><td>Died in R32</td></tr><tr><td>Ecuador</td><td>1.71</td><td>0.67</td><td>2</td><td>Died in R32</td></tr><tr><td>United States</td><td>1.54</td><td>2.67</td><td>8</td><td>Alive in R16</td></tr><tr><td>Colombia</td><td>1.43</td><td>1.33</td><td>4</td><td>Alive in R16</td></tr><tr><td>Uruguay</td><td>1.41</td><td>1.00</td><td>3</td><td>Died in groups</td></tr><tr><td>Portugal</td><td>1.40</td><td>2.00</td><td>6</td><td>Alive in R16</td></tr><tr><td>South Korea</td><td>1.37</td><td>0.67</td><td>2</td><td>Died in groups</td></tr><tr><td>Iran</td><td>1.36</td><td>1.00</td><td>3</td><td>Died in groups</td></tr><tr><td>Ivory Coast</td><td>1.35</td><td>1.33</td><td>4</td><td>Died in R32</td></tr><tr><td>Japan</td><td>1.31</td><td>2.33</td><td>7</td><td>Died in R32</td></tr><tr><td>Algeria</td><td>1.27</td><td>1.67</td><td>5</td><td>Died in R32</td></tr><tr><td>Egypt</td><td>1.26</td><td>1.67</td><td>5</td><td>Alive in R16</td></tr><tr><td>Mexico</td><td>1.24</td><td>2.00</td><td>6</td><td>Alive in R16</td></tr><tr><td>Austria</td><td>1.22</td><td>2.00</td><td>6</td><td>Died in R32</td></tr><tr><td>DR Congo</td><td>1.14</td><td>1.33</td><td>4</td><td>Died in R32</td></tr><tr><td>Sweden</td><td>0.99</td><td>2.33</td><td>7</td><td>Died in R32</td></tr><tr><td>Croatia</td><td>0.92</td><td>1.67</td><td>5</td><td>Died in R32</td></tr><tr><td>New Zealand</td><td>0.91</td><td>1.33</td><td>4</td><td>Died in groups</td></tr><tr><td>Scotland</td><td>0.87</td><td>0.33</td><td>1</td><td>Died in groups</td></tr><tr><td>South Africa</td><td>0.87</td><td>0.67</td><td>2</td><td>Died in R32</td></tr><tr><td>Jordan</td><td>0.84</td><td>1.00</td><td>3</td><td>Died in groups</td></tr><tr><td>Cape Verde</td><td>0.82</td><td>0.67</td><td>2</td><td>Died in R32</td></tr><tr><td>Czech Republic</td><td>0.79</td><td>0.67</td><td>2</td><td>Died in groups</td></tr><tr><td>Ghana</td><td>0.71</td><td>0.67</td><td>2</td><td>Died in R32</td></tr><tr><td>Australia</td><td>0.69</td><td>0.67</td><td>2</td><td>Died in R32</td></tr><tr><td>Haiti</td><td>0.65</td><td>0.67</td><td>2</td><td>Died in groups</td></tr><tr><td>Panama</td><td>0.65</td><td>0.00</td><td>0</td><td>Died in groups</td></tr><tr><td>Bosnia and Herzegovina</td><td>0.62</td><td>1.67</td><td>5</td><td>Died in R32</td></tr><tr><td>Uzbekistan</td><td>0.53</td><td>0.67</td><td>2</td><td>Died in groups</td></tr><tr><td>Qatar</td><td>0.53</td><td>0.67</td><td>2</td><td>Died in groups</td></tr><tr><td>Iraq</td><td>0.52</td><td>0.33</td><td>1</td><td>Died in groups</td></tr><tr><td>Curacao</td><td>0.47</td><td>0.33</td><td>1</td><td>Died in groups</td></tr><tr><td>Saudi Arabia</td><td>0.40</td><td>0.33</td><td>1</td><td>Died in groups</td></tr><tr><td>Paraguay</td><td>0.37</td><td>0.67</td><td>2</td><td>Alive in R16</td></tr><tr><td>Tunisia</td><td>0.32</td><td>0.67</td><td>2</td><td>Died in groups</td></tr></tbody></table></div></details>
+  </div>
+
+  <p class="body"><b>Turkey</b> is the wound this chart exists for: 2.19 xG created per match — Switzerland's class of chance-creation (2.12) — converted into 3 goals in three games (1.00 per match), and a group-stage exit. <b>Uruguay</b> managed the double fault: little created (1.41 xG/match) and even less scored (3 goals). <b>Ecuador</b> is the third wasteful case — 1.71 xG per match, 2 goals, dead in the Round of 32.</p>
+</section>
+
+<!-- BRIDGE — the signature chart, updated -->
+<section class="wrap reveal" id="bridge-sec">
+  <div class="finding-no">The standing money map · group-stage signature — pre-registered framework</div>
+  <h2>What money buys on the pitch</h2>
+  <p class="lede">Our group-stage money map — what a euro buys in chance-creation — stands unchanged on both axes. By default the 16 teams still alive hold full colour and the dead are dimmed; toggle to restore all 48, or to colour every team by its fate.</p>
+
+  <div class="panel scatter-wrap">
+    <h3>Squad value vs chance-creation — all 48 teams</h3>
+    <div class="sub">Group-stage signature — 3 matches, all 48 teams comparable. X: squad market value (log scale, Transfermarkt 28 Jun) · Y: xG created per match (API-Football) · bubble size: average age · n = 48 · tap to pin</div>
+    <div class="controls">
+      <div class="seg" id="seg-bridge">
+        <button class="on" data-mode="arch">Colour: archetype</button>
+        <button data-mode="fate">Colour: fate</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="undim-bridge"> show all 48 at full colour</label>
+    </div>
+    <div class="tip" id="tip-bridge"></div>
+    <svg class="chart" id="bridge" viewBox="0 0 760 500" role="img" aria-label="Scatter of all 48 teams: squad market value on a log x-axis against expected goals created per match in the group stage, with a fitted trend line, quadrant labels, and a toggle between assigned archetype colours and tournament-fate colours."></svg>
+    <div class="legend" id="lg-bridge-arch">
+      <span class="lg" data-a="Maestros"><i class="dot" style="background:var(--gold)"></i>Maestros</span>
+      <span class="lg" data-a="Controllers"><i class="dot" style="background:var(--green)"></i>Controllers</span>
+      <span class="lg" data-a="Counter Kings"><i class="dot" style="background:var(--red)"></i>Counter Kings</span>
+      <span class="lg" data-a="Warriors"><i class="dot" style="background:var(--blue)"></i>Warriors</span>
+      <span class="lg fixed">◦ small = younger squad · large = older</span>
+      <span class="lg fixed">— — what money predicts (log-value → dominance, r = 0.808)</span>
+    </div>
+    <div class="legend" id="lg-bridge-fate" style="display:none">
+      <span class="lg" data-f="alive"><i class="dot" style="background:var(--f-alive)"></i>Alive in R16</span>
+      <span class="lg" data-f="r32"><i class="dot" style="background:var(--f-r32)"></i>Died in R32</span>
+      <span class="lg" data-f="groups"><i class="dot" style="background:var(--f-grp)"></i>Died in groups</span>
+      <span class="lg fixed">◦ small = younger squad · large = older</span>
+      <span class="lg fixed">— — what money predicts (log-value → dominance, r = 0.808)</span>
+    </div>
+    <div class="note">Colours in the default view show <b>assigned</b> archetypes — the labels we fixed before the tournament. Measured group-stage signatures disagree with those assignments in <b>52% of cases</b> (25 of 48), including <b>Algeria</b>, whose Counter Kings designation is an editorial lock contradicted by its measured signature (63% possession, +0.09 xG difference per match). Full accounting in the <a href="#disclosures">disclosures</a>.</div>
+    <details class="dtab"><summary>Data table</summary><div class="dtab-scroll"><table class="data"><thead><tr><th>Team</th><th>Squad value</th><th>xG created/match</th><th>Assigned archetype</th><th>Fate</th></tr></thead><tbody><tr><td>France</td><td>€1.52bn</td><td>1.99</td><td>Counter Kings</td><td>Alive in R16</td></tr><tr><td>England</td><td>€1.36bn</td><td>2.04</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Spain</td><td>€1.22bn</td><td>1.75</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Portugal</td><td>€1.01bn</td><td>1.40</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Germany</td><td>€947m</td><td>2.25</td><td>Maestros</td><td>Died in R32</td></tr><tr><td>Brazil</td><td>€928m</td><td>2.45</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Argentina</td><td>€808m</td><td>1.99</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Netherlands</td><td>€754m</td><td>1.75</td><td>Controllers</td><td>Died in R32</td></tr><tr><td>Norway</td><td>€590m</td><td>2.14</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Belgium</td><td>€548m</td><td>2.26</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Ivory Coast</td><td>€522m</td><td>1.35</td><td>Maestros</td><td>Died in R32</td></tr><tr><td>Senegal</td><td>€478m</td><td>1.75</td><td>Maestros</td><td>Died in R32</td></tr><tr><td>Turkey</td><td>€474m</td><td>2.19</td><td>Maestros</td><td>Died in groups</td></tr><tr><td>Morocco</td><td>€448m</td><td>2.04</td><td>Controllers</td><td>Alive in R16</td></tr><tr><td>Sweden</td><td>€406m</td><td>0.99</td><td>Controllers</td><td>Died in R32</td></tr><tr><td>Croatia</td><td>€387m</td><td>0.92</td><td>Controllers</td><td>Died in R32</td></tr><tr><td>United States</td><td>€386m</td><td>1.54</td><td>Counter Kings</td><td>Alive in R16</td></tr><tr><td>Ecuador</td><td>€369m</td><td>1.71</td><td>Controllers</td><td>Died in R32</td></tr><tr><td>Uruguay</td><td>€359m</td><td>1.41</td><td>Counter Kings</td><td>Died in groups</td></tr><tr><td>Switzerland</td><td>€332m</td><td>2.12</td><td>Controllers</td><td>Alive in R16</td></tr><tr><td>Colombia</td><td>€302m</td><td>1.43</td><td>Maestros</td><td>Alive in R16</td></tr><tr><td>Japan</td><td>€271m</td><td>1.31</td><td>Maestros</td><td>Died in R32</td></tr><tr><td>Algeria</td><td>€257m</td><td>1.27</td><td>Counter Kings</td><td>Died in R32</td></tr><tr><td>Austria</td><td>€245m</td><td>1.22</td><td>Counter Kings</td><td>Died in R32</td></tr><tr><td>Ghana</td><td>€234m</td><td>0.71</td><td>Counter Kings</td><td>Died in R32</td></tr><tr><td>Canada</td><td>€199m</td><td>2.50</td><td>Counter Kings</td><td>Alive in R16</td></tr><tr><td>Mexico</td><td>€192m</td><td>1.24</td><td>Counter Kings</td><td>Alive in R16</td></tr><tr><td>Czech Republic</td><td>€188m</td><td>0.79</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Scotland</td><td>€170m</td><td>0.87</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Paraguay</td><td>€154m</td><td>0.37</td><td>Warriors</td><td>Alive in R16</td></tr><tr><td>Bosnia and Herzegovina</td><td>€146m</td><td>0.62</td><td>Warriors</td><td>Died in R32</td></tr><tr><td>DR Congo</td><td>€144m</td><td>1.14</td><td>Warriors</td><td>Died in R32</td></tr><tr><td>South Korea</td><td>€139m</td><td>1.37</td><td>Maestros</td><td>Died in groups</td></tr><tr><td>Egypt</td><td>€116m</td><td>1.26</td><td>Counter Kings</td><td>Alive in R16</td></tr><tr><td>Uzbekistan</td><td>€85m</td><td>0.53</td><td>Controllers</td><td>Died in groups</td></tr><tr><td>Australia</td><td>€77m</td><td>0.69</td><td>Controllers</td><td>Died in R32</td></tr><tr><td>Tunisia</td><td>€70m</td><td>0.32</td><td>Controllers</td><td>Died in groups</td></tr><tr><td>Haiti</td><td>€56m</td><td>0.65</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Cape Verde</td><td>€54m</td><td>0.82</td><td>Counter Kings</td><td>Died in R32</td></tr><tr><td>South Africa</td><td>€49m</td><td>0.87</td><td>Maestros</td><td>Died in R32</td></tr><tr><td>Saudi Arabia</td><td>€41m</td><td>0.40</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Panama</td><td>€35m</td><td>0.65</td><td>Counter Kings</td><td>Died in groups</td></tr><tr><td>New Zealand</td><td>€34m</td><td>0.91</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Iran</td><td>€32m</td><td>1.36</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Curacao</td><td>€26m</td><td>0.47</td><td>Maestros</td><td>Died in groups</td></tr><tr><td>Iraq</td><td>€21m</td><td>0.52</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Jordan</td><td>€20m</td><td>0.84</td><td>Warriors</td><td>Died in groups</td></tr><tr><td>Qatar</td><td>€20m</td><td>0.53</td><td>Controllers</td><td>Died in groups</td></tr></tbody></table></div></details>
+  </div>
+
+  <p class="body">The axes are deliberately unchanged from the group-stage piece — three matches for every team, the only window where all 48 are comparable. The fates overlay is the knockout talking back to it: the stone-grey deaths high on the y-axis are the conversion story of Act 1 above, and the cheap navy survivors low-left are the bargains Act 3 prices up below.</p>
+</section>
+
+<!-- ACT 2 — goals don't buy survival -->
+<section class="wrap reveal" id="act2-sec">
+  <div class="finding-no">Act 2 · exploratory — goals lens</div>
+  <h2>Goals don't buy survival</h2>
+  <p class="lede">All 32 knockout teams by total goals scored — group stage plus Round of 32. Scoring a lot and still being alive are strikingly different lists.</p>
+
+  <div class="panel">
+    <h3>Total goals, group + R32 — the 32 knockout teams</h3>
+    <div class="sub">Bar length: total goals (the small figures split group + R32) · colour: alive vs eliminated · hatched bars died in a shootout · n = 32</div>
+    <div class="legend">
+      <span class="lg fixed"><i class="dot" style="background:var(--f-alive)"></i>Alive in R16</span>
+      <span class="lg fixed"><i class="dot" style="background:var(--f-r32)"></i>Died in R32</span>
+      <span class="lg fixed"><i class="dot" style="background:repeating-linear-gradient(45deg,var(--f-r32),var(--f-r32) 3px,#fff 3px,#fff 5px)"></i>died on penalties</span>
+    </div>
+    <div style="margin-top:16px" id="act2-rows"><div class="g-row"><div class="nm">France <small>FRA</small></div><div class="g-track"><div class="g-bar" data-w="100.0" style="background:#20699E"></div></div><div class="gv">13<small> 10+3</small></div></div><div class="g-row"><div class="nm">Argentina <small>ARG</small></div><div class="g-track"><div class="g-bar" data-w="84.6" style="background:#20699E"></div></div><div class="gv">11<small> 8+3</small></div></div><div class="g-row"><div class="nm">Germany <small>GER</small> <span class="pens-chip">out on pens</span></div><div class="g-track"><div class="g-bar" data-w="84.6" style="background:repeating-linear-gradient(45deg,#C92F2F,#C92F2F 5px,#ffffff 5px,#ffffff 7px);outline:1px solid #C92F2F;outline-offset:-1px"></div></div><div class="gv">11<small> 10+1</small></div></div><div class="g-row"><div class="nm">Netherlands <small>NED</small> <span class="pens-chip">out on pens</span></div><div class="g-track"><div class="g-bar" data-w="84.6" style="background:repeating-linear-gradient(45deg,#C92F2F,#C92F2F 5px,#ffffff 5px,#ffffff 7px);outline:1px solid #C92F2F;outline-offset:-1px"></div></div><div class="gv">11<small> 10+1</small></div></div><div class="g-row"><div class="nm">Norway <small>NOR</small></div><div class="g-track"><div class="g-bar" data-w="76.9" style="background:#20699E"></div></div><div class="gv">10<small> 8+2</small></div></div><div class="g-row"><div class="nm">Senegal <small>SEN</small></div><div class="g-track"><div class="g-bar" data-w="76.9" style="background:#C92F2F"></div></div><div class="gv">10<small> 8+2</small></div></div><div class="g-row"><div class="nm">United States <small>USA</small></div><div class="g-track"><div class="g-bar" data-w="76.9" style="background:#20699E"></div></div><div class="gv">10<small> 8+2</small></div></div><div class="g-row"><div class="nm">Belgium <small>BEL</small></div><div class="g-track"><div class="g-bar" data-w="69.2" style="background:#20699E"></div></div><div class="gv">9<small> 6+3</small></div></div><div class="g-row"><div class="nm">Brazil <small>BRA</small></div><div class="g-track"><div class="g-bar" data-w="69.2" style="background:#20699E"></div></div><div class="gv">9<small> 7+2</small></div></div><div class="g-row"><div class="nm">Canada <small>CAN</small></div><div class="g-track"><div class="g-bar" data-w="69.2" style="background:#20699E"></div></div><div class="gv">9<small> 8+1</small></div></div><div class="g-row"><div class="nm">Switzerland <small>SUI</small></div><div class="g-track"><div class="g-bar" data-w="69.2" style="background:#20699E"></div></div><div class="gv">9<small> 7+2</small></div></div><div class="g-row"><div class="nm">England <small>ENG</small></div><div class="g-track"><div class="g-bar" data-w="61.5" style="background:#20699E"></div></div><div class="gv">8<small> 6+2</small></div></div><div class="g-row"><div class="nm">Japan <small>JPN</small></div><div class="g-track"><div class="g-bar" data-w="61.5" style="background:#C92F2F"></div></div><div class="gv">8<small> 7+1</small></div></div><div class="g-row"><div class="nm">Mexico <small>MEX</small></div><div class="g-track"><div class="g-bar" data-w="61.5" style="background:#20699E"></div></div><div class="gv">8<small> 6+2</small></div></div><div class="g-row"><div class="nm">Portugal <small>POR</small></div><div class="g-track"><div class="g-bar" data-w="61.5" style="background:#20699E"></div></div><div class="gv">8<small> 6+2</small></div></div><div class="g-row"><div class="nm">Spain <small>ESP</small></div><div class="g-track"><div class="g-bar" data-w="61.5" style="background:#20699E"></div></div><div class="gv">8<small> 5+3</small></div></div><div class="g-row"><div class="nm">Morocco <small>MAR</small></div><div class="g-track"><div class="g-bar" data-w="53.8" style="background:#20699E"></div></div><div class="gv">7<small> 6+1</small></div></div><div class="g-row"><div class="nm">Sweden <small>SWE</small></div><div class="g-track"><div class="g-bar" data-w="53.8" style="background:#C92F2F"></div></div><div class="gv">7<small> 7+0</small></div></div><div class="g-row"><div class="nm">Austria <small>AUT</small></div><div class="g-track"><div class="g-bar" data-w="46.2" style="background:#C92F2F"></div></div><div class="gv">6<small> 6+0</small></div></div><div class="g-row"><div class="nm">Croatia <small>CRO</small></div><div class="g-track"><div class="g-bar" data-w="46.2" style="background:#C92F2F"></div></div><div class="gv">6<small> 5+1</small></div></div><div class="g-row"><div class="nm">Egypt <small>EGY</small></div><div class="g-track"><div class="g-bar" data-w="46.2" style="background:#20699E"></div></div><div class="gv">6<small> 5+1</small></div></div><div class="g-row"><div class="nm">Algeria <small>ALG</small></div><div class="g-track"><div class="g-bar" data-w="38.5" style="background:#C92F2F"></div></div><div class="gv">5<small> 5+0</small></div></div><div class="g-row"><div class="nm">Bosnia and Herzegovina <small>BIH</small></div><div class="g-track"><div class="g-bar" data-w="38.5" style="background:#C92F2F"></div></div><div class="gv">5<small> 5+0</small></div></div><div class="g-row"><div class="nm">Colombia <small>COL</small></div><div class="g-track"><div class="g-bar" data-w="38.5" style="background:#20699E"></div></div><div class="gv">5<small> 4+1</small></div></div><div class="g-row"><div class="nm">DR Congo <small>COD</small></div><div class="g-track"><div class="g-bar" data-w="38.5" style="background:#C92F2F"></div></div><div class="gv">5<small> 4+1</small></div></div><div class="g-row"><div class="nm">Ivory Coast <small>CIV</small></div><div class="g-track"><div class="g-bar" data-w="38.5" style="background:#C92F2F"></div></div><div class="gv">5<small> 4+1</small></div></div><div class="g-row"><div class="nm">Cape Verde <small>CPV</small></div><div class="g-track"><div class="g-bar" data-w="30.8" style="background:#C92F2F"></div></div><div class="gv">4<small> 2+2</small></div></div><div class="g-row"><div class="nm">Australia <small>AUS</small> <span class="pens-chip">out on pens</span></div><div class="g-track"><div class="g-bar" data-w="23.1" style="background:repeating-linear-gradient(45deg,#C92F2F,#C92F2F 5px,#ffffff 5px,#ffffff 7px);outline:1px solid #C92F2F;outline-offset:-1px"></div></div><div class="gv">3<small> 2+1</small></div></div><div class="g-row"><div class="nm">Paraguay <small>PAR</small></div><div class="g-track"><div class="g-bar" data-w="23.1" style="background:#20699E"></div></div><div class="gv">3<small> 2+1</small></div></div><div class="g-row"><div class="nm">Ecuador <small>ECU</small></div><div class="g-track"><div class="g-bar" data-w="15.4" style="background:#C92F2F"></div></div><div class="gv">2<small> 2+0</small></div></div><div class="g-row"><div class="nm">Ghana <small>GHA</small></div><div class="g-track"><div class="g-bar" data-w="15.4" style="background:#C92F2F"></div></div><div class="gv">2<small> 2+0</small></div></div><div class="g-row"><div class="nm">South Africa <small>RSA</small></div><div class="g-track"><div class="g-bar" data-w="15.4" style="background:#C92F2F"></div></div><div class="gv">2<small> 2+0</small></div></div></div>
+  </div>
+
+  <p class="body"><b>Germany</b> and the <b>Netherlands</b> scored 11 each — the joint-loudest attacks in the field — and both are dead, both on penalties. <b>Paraguay</b> scored 3 in four matches and plays on. The knockout does not pay royalties on past goals: Australia, Germany and Netherlands all died from twelve yards while out-scoring most of the teams that survived them.</p>
+</section>
+
+<!-- ACT 3 — goals per euro -->
+<section class="wrap reveal" id="act3-sec">
+  <div class="finding-no">Act 3 · exploratory — goals lens</div>
+  <h2>Goals per euro</h2>
+  <p class="lede">Same goals, wildly different invoices. Squad market value against total goals — with the two expensive group-stage corpses, Turkey and Uruguay, kept on the chart as a warning.</p>
+
+  <div class="panel scatter-wrap">
+    <h3>Squad value vs total goals — 32 knockout teams + 2 group-stage deaths</h3>
+    <div class="sub">X: squad market value (log scale, Transfermarkt 28 Jun) · Y: goals, group + R32 · diamonds: died in groups (goals from 3 matches only) · n = 34 · tap to pin</div>
+    <div class="tip" id="tip-act3"></div>
+    <svg class="chart" id="act3" viewBox="0 0 760 520" role="img" aria-label="Scatter of the 32 knockout teams plus Turkey and Uruguay: squad market value on a log x-axis against total goals scored, coloured by tournament fate, group-stage deaths drawn as diamonds."></svg>
+    <div class="legend" id="lg-act3">
+      <span class="lg fixed"><i class="dot" style="background:var(--f-alive)"></i>Alive in R16</span>
+      <span class="lg fixed"><i class="dot" style="background:var(--f-r32)"></i>Died in R32</span>
+      <span class="lg fixed"><i class="diamond" style="background:var(--f-grp)"></i>Died in groups (TUR, URU)</span>
+    </div>
+    <div class="feat" id="cpv-card">
+      <div class="feat-tag">◳ CPV, ringed above · exploratory — goals lens</div>
+      <h4>€13.6m a goal — and Argentina still needed a 3–2.</h4>
+      <p>The cheapest goals in the knockout field: <b>€13.6m per goal</b> — 4 goals on a €54.5m squad, the minimum across all 32 knockout teams. In the Round of 32, Cape Verde put <b>2 goals past Argentina from 0.45 xG</b>, across a <b>14.8× squad-value gap</b>, its keeper credited with <b>8 saves</b> — and went out 3–2.</p>
+    </div>
+    <details class="dtab"><summary>Data table</summary><div class="dtab-scroll"><table class="data"><thead><tr><th>Team</th><th>Squad value</th><th>Total goals</th><th>Fate</th></tr></thead><tbody><tr><td>France</td><td>€1.52bn</td><td>13</td><td>Alive in R16</td></tr><tr><td>Germany</td><td>€947m</td><td>11</td><td>Died in R32</td></tr><tr><td>Argentina</td><td>€808m</td><td>11</td><td>Alive in R16</td></tr><tr><td>Netherlands</td><td>€754m</td><td>11</td><td>Died in R32</td></tr><tr><td>Norway</td><td>€590m</td><td>10</td><td>Alive in R16</td></tr><tr><td>Senegal</td><td>€478m</td><td>10</td><td>Died in R32</td></tr><tr><td>United States</td><td>€386m</td><td>10</td><td>Alive in R16</td></tr><tr><td>Brazil</td><td>€928m</td><td>9</td><td>Alive in R16</td></tr><tr><td>Belgium</td><td>€548m</td><td>9</td><td>Alive in R16</td></tr><tr><td>Switzerland</td><td>€332m</td><td>9</td><td>Alive in R16</td></tr><tr><td>Canada</td><td>€199m</td><td>9</td><td>Alive in R16</td></tr><tr><td>England</td><td>€1.36bn</td><td>8</td><td>Alive in R16</td></tr><tr><td>Spain</td><td>€1.22bn</td><td>8</td><td>Alive in R16</td></tr><tr><td>Portugal</td><td>€1.01bn</td><td>8</td><td>Alive in R16</td></tr><tr><td>Japan</td><td>€271m</td><td>8</td><td>Died in R32</td></tr><tr><td>Mexico</td><td>€192m</td><td>8</td><td>Alive in R16</td></tr><tr><td>Morocco</td><td>€448m</td><td>7</td><td>Alive in R16</td></tr><tr><td>Sweden</td><td>€406m</td><td>7</td><td>Died in R32</td></tr><tr><td>Croatia</td><td>€387m</td><td>6</td><td>Died in R32</td></tr><tr><td>Austria</td><td>€245m</td><td>6</td><td>Died in R32</td></tr><tr><td>Egypt</td><td>€116m</td><td>6</td><td>Alive in R16</td></tr><tr><td>Ivory Coast</td><td>€522m</td><td>5</td><td>Died in R32</td></tr><tr><td>Colombia</td><td>€302m</td><td>5</td><td>Alive in R16</td></tr><tr><td>Algeria</td><td>€257m</td><td>5</td><td>Died in R32</td></tr><tr><td>Bosnia and Herzegovina</td><td>€146m</td><td>5</td><td>Died in R32</td></tr><tr><td>DR Congo</td><td>€144m</td><td>5</td><td>Died in R32</td></tr><tr><td>Cape Verde</td><td>€54m</td><td>4</td><td>Died in R32</td></tr><tr><td>Turkey</td><td>€474m</td><td>3</td><td>Died in groups</td></tr><tr><td>Uruguay</td><td>€359m</td><td>3</td><td>Died in groups</td></tr><tr><td>Paraguay</td><td>€154m</td><td>3</td><td>Alive in R16</td></tr><tr><td>Australia</td><td>€77m</td><td>3</td><td>Died in R32</td></tr><tr><td>Ecuador</td><td>€369m</td><td>2</td><td>Died in R32</td></tr><tr><td>Ghana</td><td>€234m</td><td>2</td><td>Died in R32</td></tr><tr><td>South Africa</td><td>€49m</td><td>2</td><td>Died in R32</td></tr></tbody></table></div></details>
+  </div>
+
+  <p class="body"><b>Canada</b> and <b>Brazil</b> have scored 9 goals each. Brazil's squad (€928m) costs 4.7× Canada's (€199m). <b>England</b>'s €1.36bn has bought 8 goals — exactly <b>Mexico</b>'s output at €192m. And at the wasteful end, <b>Germany</b>'s €947m produced 11 goals and a penalties funeral, while <b>Egypt</b> is alive on a squad cheaper than some single defenders in this chart.</p>
+</section>
+
+<!-- PRE-REGISTERED RESULTS -->
+<section class="prereg" id="prereg">
+  <div class="wrap reveal">
+    <div class="finding-no" style="color:var(--navy)">Pre-registered results · <span class="tag tag-pre">locked before the round of 32</span></div>
+    <h2>The five questions we froze, answered</h2>
+    <p class="lede">These five questions — and their definitions — were pre-registered before a knockout ball was kicked. The answers below are computed from the database; the definitions were not adjusted after the fact. Penalty-shootout ties are flagged in every table.</p>
+
+    <div class="qblock">
+      <h3><b>Q1</b> — Did the richer squad keep winning?</h3>
+      <p><b>Yes: 13 of 16 ties went to the richer side.</b> The three escapes:</p>
+      <ul><li><b>Paraguay</b> (€154m) beat <b>Germany</b> (€947m) — a 6.2× value gap, on penalties</li><li><b>Morocco</b> (€448m) beat <b>Netherlands</b> (€754m) — a 1.7× value gap, on penalties</li><li><b>Mexico</b> (€192m) beat <b>Ecuador</b> (€369m) — a 1.9× value gap</li></ul>
+      <details class="dtab"><summary>All 16 ties</summary><div class="dtab-scroll">
+        <table class="data"><thead><tr><th>Tie</th><th>Score</th><th>Winner</th><th>Ladder</th></tr></thead>
+        <tbody><tr><td>South Africa <small>€49m</small> v Canada <small>€199m</small></td><td>0–1</td><td><b>Canada</b></td><td class="ok">richer won</td></tr><tr><td>Germany <small>€947m</small> v Paraguay <small>€154m</small></td><td>1–1 (3–4 p) <span class="pens-chip">pens</span></td><td><b>Paraguay</b></td><td class="no">upset of the ladder</td></tr><tr><td>Netherlands <small>€754m</small> v Morocco <small>€448m</small></td><td>1–1 (2–3 p) <span class="pens-chip">pens</span></td><td><b>Morocco</b></td><td class="no">upset of the ladder</td></tr><tr><td>Brazil <small>€928m</small> v Japan <small>€271m</small></td><td>2–1</td><td><b>Brazil</b></td><td class="ok">richer won</td></tr><tr><td>France <small>€1.52bn</small> v Sweden <small>€406m</small></td><td>3–0</td><td><b>France</b></td><td class="ok">richer won</td></tr><tr><td>Ivory Coast <small>€522m</small> v Norway <small>€590m</small></td><td>1–2</td><td><b>Norway</b></td><td class="ok">richer won</td></tr><tr><td>Mexico <small>€192m</small> v Ecuador <small>€369m</small></td><td>2–0</td><td><b>Mexico</b></td><td class="no">upset of the ladder</td></tr><tr><td>England <small>€1.36bn</small> v DR Congo <small>€144m</small></td><td>2–1</td><td><b>England</b></td><td class="ok">richer won</td></tr><tr><td>United States <small>€386m</small> v Bosnia and Herzegovina <small>€146m</small></td><td>2–0</td><td><b>United States</b></td><td class="ok">richer won</td></tr><tr><td>Belgium <small>€548m</small> v Senegal <small>€478m</small></td><td>3–2</td><td><b>Belgium</b></td><td class="ok">richer won</td></tr><tr><td>Portugal <small>€1.01bn</small> v Croatia <small>€387m</small></td><td>2–1</td><td><b>Portugal</b></td><td class="ok">richer won</td></tr><tr><td>Spain <small>€1.22bn</small> v Austria <small>€245m</small></td><td>3–0</td><td><b>Spain</b></td><td class="ok">richer won</td></tr><tr><td>Switzerland <small>€332m</small> v Algeria <small>€257m</small></td><td>2–0</td><td><b>Switzerland</b></td><td class="ok">richer won</td></tr><tr><td>Argentina <small>€808m</small> v Cape Verde <small>€54m</small></td><td>3–2</td><td><b>Argentina</b></td><td class="ok">richer won</td></tr><tr><td>Colombia <small>€302m</small> v Ghana <small>€234m</small></td><td>1–0</td><td><b>Colombia</b></td><td class="ok">richer won</td></tr><tr><td>Australia <small>€77m</small> v Egypt <small>€116m</small></td><td>1–1 (2–4 p) <span class="pens-chip">pens</span></td><td><b>Egypt</b></td><td class="ok">richer won</td></tr></tbody></table>
+      </div></details>
+    </div>
+
+    <div class="qblock">
+      <h3><b>Q2</b> — Did any archetype pairing produce a pattern?</h3>
+      <p>Counts, not percentages — no cell reaches n = 5, so none of this is evidence of a style edge. It is what happened, stated plainly.</p>
+      <div class="qscroll">
+        <table class="data"><thead><tr><th>Pairing (assigned archetypes)</th><th>Ties</th><th>Outcomes</th></tr></thead>
+        <tbody><tr><td>Counter Kings v Maestros</td><td>4</td><td>Maestros won 3 · Counter Kings won 1</td></tr><tr><td>Controllers v Counter Kings</td><td>4</td><td>Counter Kings won 3 · Controllers won 1 (1 on pens)</td></tr><tr><td>Maestros v Maestros</td><td>3</td><td>Maestros won 3</td></tr><tr><td>Maestros v Warriors</td><td>2</td><td>Warriors won 1 · Maestros won 1 (1 on pens)</td></tr><tr><td>Controllers v Controllers</td><td>1</td><td>Controllers won 1 (1 on pens)</td></tr><tr><td>Counter Kings v Warriors</td><td>1</td><td>Counter Kings won 1</td></tr><tr><td>Controllers v Maestros</td><td>1</td><td>Maestros won 1</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div class="qblock">
+      <h3><b>Q3</b> — How many upsets, under the frozen definition?</h3>
+      <p><b>Exactly one.</b> We froze "upset" as: winner's squad value below half the loser's (&lt;0.5×). One tie qualified — <b>Paraguay</b> (€154m) over <b>Germany</b> (€947m), a <b>6.2×</b> value gap, decided on penalties. Every other tie, including the two other richer-side losses in Q1, fell short of the threshold.</p>
+    </div>
+
+    <div class="qblock">
+      <h3><b>Q4</b> — Did survivors come from the dominant quadrant?</h3>
+      <p><b>13 of 16 survivors</b> measure in the dominant quadrant of the group-stage signature, under the same measured-quadrant mapping the group-stage piece used (boundaries at 50% possession, zero xG difference — the mapping behind the 52% mislabel figure). The 3 exceptions:</p>
+      <div><span class="chip-x">Egypt <small>54.3% poss, -0.26 xGd</small></span><span class="chip-x">Norway <small>48.7% poss, +0.8 xGd</small></span><span class="chip-x">Paraguay <small>33.3% poss, -1.01 xGd</small></span></div>
+      <p style="font-size:13px;color:var(--muted)">Sensitivity: re-drawing the boundaries at the 48-team medians (50.3% possession, +0.155 xG difference) also gives 13 of 16, with the same exceptions — the skew holds under either boundary.</p>
+    </div>
+
+    <div class="qblock">
+      <h3><b>Q5</b> — Did teams that beat their price survive more?</h3>
+      <p>Winners' mean group-stage value residual: <b>+0.24</b>. Losers': <b>-0.07</b>. That is a lean, not a law: the gap (0.31) is under half the spread of those residuals across the 32 knockout teams (±0.63), the sample is 16 ties, and 3 of them were decided by shootouts — coin flips wearing a scoreline.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLOSURES -->
+<section class="disclosure" id="disclosures">
+  <div class="wrap reveal">
+    <div class="finding-no">Disclosures</div>
+    <div class="box">
+      <h2 style="font-size:clamp(20px,2.6vw,26px)">What is locked, what is exploratory, and what is a coin flip</h2>
+      <p><b>The goals lens is exploratory.</b> Acts 1–3 — conversion, goal totals, goals per euro — were not among the pre-registered questions. We built them after watching the Round of 32, and they should be read as description with the freedom (and the risks) that implies. The pre-registered section above is the part of this page that was falsifiable in advance.</p>
+      <p><b>Assigned vs measured archetypes.</b> The archetype colours throughout show <b>assigned</b> labels, fixed before the tournament. Measured group-stage signatures disagree with the assignments in 52% of cases (25 of 48). That includes <b>Algeria</b>, whose Counter Kings designation is an editorial lock contradicted by its measured signature — 63% possession and +0.09 xG difference per match make it a structured, near-neutral side. We keep the lock and disclose it; quietly reclassifying a team after seeing its results is how frameworks stop being falsifiable.</p>
+      <p><b>Penalties are a coin flip.</b> 3 of the 16 ties were decided from the spot. A shootout carries almost no information about the 120 minutes before it, which is why every pens result is flagged wherever it appears and why Q5's small lean should not be inflated into a survival law.</p>
+      <p class="mono" style="font-size:12.5px;margin-top:16px">Sources: results FIFA.com · match stats API-Football (league 1, season 2026) · squad values Transfermarkt 28 Jun · sample sizes stated throughout.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h3>How we know these numbers are trustworthy</h3>
+    <div class="src">
+      <div class="s"><div class="t">FIFA</div><div class="d">Match results — used to spot-check every recovered scoreline before it entered the database. R32 results corroborated against API-Football's independent fixture feed (goals and shootouts, 16/16 match); stats spot-checked against FIFA match-centre counting stats.</div></div>
+      <div class="s"><div class="t">The Athletic</div><div class="d">Group standings (the checksum that verified all 72 results) and the tactical guides behind the archetype language.</div></div>
+      <div class="s"><div class="t">Transfermarkt</div><div class="d">Squad market values, all 48 nations, single June-28 snapshot.</div></div>
+      <div class="s"><div class="t">API-Football</div><div class="d">Per-match xG, possession, shots and passing — 144 team-match records across the 72 group games, plus 32 across the Round of 32.</div></div>
+    </div>
+    <h3 style="margin-top:34px">Reading the numbers</h3>
+    <div class="src">
+      <div class="s"><div class="t">xG (expected goals)</div><div class="d">The scoring probability of each shot, summed. Measures the quality of chances created, independent of finishing luck.</div></div>
+      <div class="s"><div class="t">xG difference</div><div class="d">xG created minus xG conceded, per match. Positive means the team dominated the chances — the piece's dominance axis.</div></div>
+      <div class="s"><div class="t">Squad market value</div><div class="d">Sum of the squad's Transfermarkt valuations: the market's collective estimate of talent — the money axis.</div></div>
+      <div class="s"><div class="t">Value residual</div><div class="d">A team's xG difference minus what its budget predicts. Positive means it beat its price — the style signal once money is stripped out.</div></div>
+    </div>
+    <p class="method"><b>Method.</b> The dataset was assembled through an AI coding agent under a strict gate discipline — inspect, dry-run, verify, then write — with every database change backed up and read-back-verified. The discipline caught what trusting the output would not have: 23 reversed scorelines, a value set silently truncated to only the teams that advanced (which would have made "money predicts advancement" a tautology), and null card-counts that would have quietly poisoned the averages. An agent's confident output is a draft, not a fact; the analyst's value is designing the verification. The knockout dataset was built under the same gate discipline — results parsed programmatically from the published bracket, penalty mappings hard-asserted against externally verified values.</p>
+    <div class="foot-meta">
+      <span>Infometrix · WC2026 · Repton, UK</span>
+      <span class="mono">Group stage + Round of 32 · 88 matches · 48 nations · compiled 04 Jul 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var MOBILE = window.matchMedia && window.matchMedia("(max-width: 640px)").matches;
+  var COL={ "Maestros":"#C99A1E","Controllers":"#1D8A4E","Counter Kings":"#C92F2F","Warriors":"#1E5FD6" };
+  var FC={ alive:"#165280", r32:"#B0745A", groups:"#8F969E" };
+  var FL={ alive:"Alive in R16", r32:"Died in R32", groups:"Died in groups" };
+
+  var DATA={"teams":[{"team":"France","code":"FRA","arch":"Counter Kings","val":1520000000.0,"poss":55.3,"xf":1.99,"xa":0.95,"xd":1.03,"g":10,"age":27.0,"fate":"alive","r32g":3,"tot":13,"pd":false},{"team":"England","code":"ENG","arch":"Maestros","val":1360000000.0,"poss":66.0,"xf":2.04,"xa":0.51,"xd":1.53,"g":6,"age":27.2,"fate":"alive","r32g":2,"tot":8,"pd":false},{"team":"Spain","code":"ESP","arch":"Maestros","val":1220000000.0,"poss":69.3,"xf":1.75,"xa":0.18,"xd":1.57,"g":5,"age":26.7,"fate":"alive","r32g":3,"tot":8,"pd":false},{"team":"Portugal","code":"POR","arch":"Maestros","val":1010000000.0,"poss":62.0,"xf":1.4,"xa":0.94,"xd":0.46,"g":6,"age":28.1,"fate":"alive","r32g":2,"tot":8,"pd":false},{"team":"Germany","code":"GER","arch":"Maestros","val":947000000.0,"poss":62.0,"xf":2.25,"xa":0.97,"xd":1.29,"g":10,"age":27.9,"fate":"r32","r32g":1,"tot":11,"pd":true},{"team":"Brazil","code":"BRA","arch":"Maestros","val":928200000.0,"poss":54.0,"xf":2.45,"xa":0.88,"xd":1.57,"g":7,"age":29.3,"fate":"alive","r32g":2,"tot":9,"pd":false},{"team":"Argentina","code":"ARG","arch":"Maestros","val":807500000.0,"poss":58.3,"xf":1.99,"xa":0.52,"xd":1.47,"g":8,"age":29.0,"fate":"alive","r32g":3,"tot":11,"pd":false},{"team":"Netherlands","code":"NED","arch":"Controllers","val":754200000.0,"poss":60.7,"xf":1.75,"xa":0.74,"xd":1.01,"g":10,"age":27.7,"fate":"r32","r32g":1,"tot":11,"pd":true},{"team":"Norway","code":"NOR","arch":"Maestros","val":589900000.0,"poss":48.7,"xf":2.14,"xa":1.34,"xd":0.8,"g":8,"age":26.9,"fate":"alive","r32g":2,"tot":10,"pd":false},{"team":"Belgium","code":"BEL","arch":"Maestros","val":547500000.0,"poss":59.3,"xf":2.26,"xa":0.65,"xd":1.61,"g":6,"age":27.6,"fate":"alive","r32g":3,"tot":9,"pd":false},{"team":"Ivory Coast","code":"CIV","arch":"Maestros","val":522100000.0,"poss":50.3,"xf":1.35,"xa":1.13,"xd":0.22,"g":4,"age":25.9,"fate":"r32","r32g":1,"tot":5,"pd":false},{"team":"Senegal","code":"SEN","arch":"Maestros","val":478100000.0,"poss":58.0,"xf":1.75,"xa":1.38,"xd":0.38,"g":8,"age":27.0,"fate":"r32","r32g":2,"tot":10,"pd":false},{"team":"Turkey","code":"TUR","arch":"Maestros","val":473700000.0,"poss":66.0,"xf":2.19,"xa":1.21,"xd":0.98,"g":3,"age":27.6,"fate":"groups","r32g":null,"tot":3,"pd":false},{"team":"Morocco","code":"MAR","arch":"Controllers","val":447700000.0,"poss":59.0,"xf":2.04,"xa":0.81,"xd":1.23,"g":6,"age":26.5,"fate":"alive","r32g":1,"tot":7,"pd":false},{"team":"Sweden","code":"SWE","arch":"Controllers","val":406080000.0,"poss":48.7,"xf":0.99,"xa":1.37,"xd":-0.37,"g":7,"age":27.5,"fate":"r32","r32g":0,"tot":7,"pd":false},{"team":"Croatia","code":"CRO","arch":"Controllers","val":387300000.0,"poss":53.0,"xf":0.92,"xa":1.46,"xd":-0.54,"g":5,"age":28.2,"fate":"r32","r32g":1,"tot":6,"pd":false},{"team":"United States","code":"USA","arch":"Counter Kings","val":385650000.0,"poss":60.0,"xf":1.54,"xa":1.31,"xd":0.23,"g":8,"age":26.9,"fate":"alive","r32g":2,"tot":10,"pd":false},{"team":"Ecuador","code":"ECU","arch":"Controllers","val":368700000.0,"poss":55.3,"xf":1.71,"xa":0.89,"xd":0.82,"g":2,"age":26.1,"fate":"r32","r32g":0,"tot":2,"pd":false},{"team":"Uruguay","code":"URU","arch":"Counter Kings","val":359300000.0,"poss":55.0,"xf":1.41,"xa":0.8,"xd":0.61,"g":3,"age":28.8,"fate":"groups","r32g":null,"tot":3,"pd":false},{"team":"Switzerland","code":"SUI","arch":"Controllers","val":332500000.0,"poss":61.7,"xf":2.12,"xa":0.83,"xd":1.29,"g":7,"age":28.4,"fate":"alive","r32g":2,"tot":9,"pd":false},{"team":"Colombia","code":"COL","arch":"Maestros","val":302350000.0,"poss":60.0,"xf":1.43,"xa":0.82,"xd":0.61,"g":4,"age":30.1,"fate":"alive","r32g":1,"tot":5,"pd":false},{"team":"Japan","code":"JPN","arch":"Maestros","val":270850000.0,"poss":51.3,"xf":1.31,"xa":0.49,"xd":0.82,"g":7,"age":27.8,"fate":"r32","r32g":1,"tot":8,"pd":false},{"team":"Algeria","code":"ALG","arch":"Counter Kings","val":256900000.0,"poss":63.0,"xf":1.27,"xa":1.18,"xd":0.09,"g":5,"age":26.8,"fate":"r32","r32g":0,"tot":5,"pd":false},{"team":"Austria","code":"AUT","arch":"Counter Kings","val":245200000.0,"poss":48.0,"xf":1.22,"xa":1.71,"xd":-0.49,"g":6,"age":28.6,"fate":"r32","r32g":0,"tot":6,"pd":false},{"team":"Ghana","code":"GHA","arch":"Counter Kings","val":234350000.0,"poss":35.3,"xf":0.71,"xa":0.84,"xd":-0.13,"g":2,"age":27.1,"fate":"r32","r32g":0,"tot":2,"pd":false},{"team":"Canada","code":"CAN","arch":"Counter Kings","val":198650000.0,"poss":61.7,"xf":2.5,"xa":0.76,"xd":1.73,"g":8,"age":27.0,"fate":"alive","r32g":1,"tot":9,"pd":false},{"team":"Mexico","code":"MEX","arch":"Counter Kings","val":191850000.0,"poss":50.3,"xf":1.24,"xa":0.5,"xd":0.74,"g":6,"age":27.9,"fate":"alive","r32g":2,"tot":8,"pd":false},{"team":"Czech Republic","code":"CZE","arch":"Warriors","val":188180000.0,"poss":42.7,"xf":0.79,"xa":1.81,"xd":-1.01,"g":2,"age":27.6,"fate":"groups","r32g":null,"tot":2,"pd":false},{"team":"Scotland","code":"SCO","arch":"Warriors","val":170250000.0,"poss":44.3,"xf":0.87,"xa":2.12,"xd":-1.26,"g":1,"age":29.3,"fate":"groups","r32g":null,"tot":1,"pd":false},{"team":"Paraguay","code":"PAR","arch":"Warriors","val":153650000.0,"poss":33.3,"xf":0.37,"xa":1.38,"xd":-1.01,"g":2,"age":29.0,"fate":"alive","r32g":1,"tot":3,"pd":false},{"team":"Bosnia and Herzegovina","code":"BIH","arch":"Warriors","val":146400000.0,"poss":43.7,"xf":0.62,"xa":1.35,"xd":-0.73,"g":5,"age":26.4,"fate":"r32","r32g":0,"tot":5,"pd":false},{"team":"DR Congo","code":"COD","arch":"Warriors","val":143900000.0,"poss":39.7,"xf":1.14,"xa":0.61,"xd":0.53,"g":4,"age":29.1,"fate":"r32","r32g":1,"tot":5,"pd":false},{"team":"South Korea","code":"KOR","arch":"Maestros","val":139050000.0,"poss":62.7,"xf":1.37,"xa":0.84,"xd":0.53,"g":2,"age":28.1,"fate":"groups","r32g":null,"tot":2,"pd":false},{"team":"Egypt","code":"EGY","arch":"Counter Kings","val":116480000.0,"poss":54.3,"xf":1.26,"xa":1.52,"xd":-0.26,"g":5,"age":28.9,"fate":"alive","r32g":1,"tot":6,"pd":false},{"team":"Uzbekistan","code":"UZB","arch":"Controllers","val":85130000.0,"poss":38.3,"xf":0.53,"xa":2.13,"xd":-1.6,"g":2,"age":28.5,"fate":"groups","r32g":null,"tot":2,"pd":false},{"team":"Australia","code":"AUS","arch":"Controllers","val":77450000.0,"poss":40.7,"xf":0.69,"xa":0.89,"xd":-0.2,"g":2,"age":27.4,"fate":"r32","r32g":1,"tot":3,"pd":true},{"team":"Tunisia","code":"TUN","arch":"Controllers","val":69950000.0,"poss":39.3,"xf":0.32,"xa":1.77,"xd":-1.45,"g":2,"age":26.6,"fate":"groups","r32g":null,"tot":2,"pd":false},{"team":"Haiti","code":"HAI","arch":"Warriors","val":55900000.0,"poss":42.7,"xf":0.65,"xa":2.19,"xd":-1.54,"g":2,"age":27.6,"fate":"groups","r32g":null,"tot":2,"pd":false},{"team":"Cape Verde","code":"CPV","arch":"Counter Kings","val":54500000.0,"poss":37.3,"xf":0.82,"xa":1.6,"xd":-0.78,"g":2,"age":29.8,"fate":"r32","r32g":2,"tot":4,"pd":false},{"team":"South Africa","code":"RSA","arch":"Maestros","val":49250000.0,"poss":44.3,"xf":0.87,"xa":1.13,"xd":-0.26,"g":2,"age":26.8,"fate":"r32","r32g":0,"tot":2,"pd":false},{"team":"Saudi Arabia","code":"KSA","arch":"Warriors","val":40680000.0,"poss":38.3,"xf":0.4,"xa":1.8,"xd":-1.41,"g":1,"age":28.6,"fate":"groups","r32g":null,"tot":1,"pd":false},{"team":"Panama","code":"PAN","arch":"Counter Kings","val":34550000.0,"poss":45.7,"xf":0.65,"xa":1.51,"xd":-0.86,"g":0,"age":30.4,"fate":"groups","r32g":null,"tot":0,"pd":false},{"team":"New Zealand","code":"NZL","arch":"Warriors","val":34300000.0,"poss":47.0,"xf":0.91,"xa":2.34,"xd":-1.43,"g":4,"age":28.1,"fate":"groups","r32g":null,"tot":4,"pd":false},{"team":"Iran","code":"IRN","arch":"Warriors","val":32050000.0,"poss":39.3,"xf":1.36,"xa":1.29,"xd":0.07,"g":3,"age":30.5,"fate":"groups","r32g":null,"tot":3,"pd":false},{"team":"Curacao","code":"CUW","arch":"Maestros","val":25780000.0,"poss":32.3,"xf":0.47,"xa":2.79,"xd":-2.32,"g":1,"age":28.1,"fate":"groups","r32g":null,"tot":1,"pd":false},{"team":"Iraq","code":"IRQ","arch":"Warriors","val":21200000.0,"poss":38.0,"xf":0.52,"xa":2.73,"xd":-2.21,"g":1,"age":27.3,"fate":"groups","r32g":null,"tot":1,"pd":false},{"team":"Jordan","code":"JOR","arch":"Warriors","val":20300000.0,"poss":30.7,"xf":0.84,"xa":1.91,"xd":-1.07,"g":3,"age":28.3,"fate":"groups","r32g":null,"tot":3,"pd":false},{"team":"Qatar","code":"QAT","arch":"Controllers","val":19930000.0,"poss":33.0,"xf":0.53,"xa":2.83,"xd":-2.3,"g":2,"age":29.9,"fate":"groups","r32g":null,"tot":2,"pd":false}],"act3":[{"team":"France","code":"FRA","val":1520000000.0,"tot":13,"fate":"alive","pd":false},{"team":"England","code":"ENG","val":1360000000.0,"tot":8,"fate":"alive","pd":false},{"team":"Spain","code":"ESP","val":1220000000.0,"tot":8,"fate":"alive","pd":false},{"team":"Portugal","code":"POR","val":1010000000.0,"tot":8,"fate":"alive","pd":false},{"team":"Germany","code":"GER","val":947000000.0,"tot":11,"fate":"r32","pd":true},{"team":"Brazil","code":"BRA","val":928200000.0,"tot":9,"fate":"alive","pd":false},{"team":"Argentina","code":"ARG","val":807500000.0,"tot":11,"fate":"alive","pd":false},{"team":"Netherlands","code":"NED","val":754200000.0,"tot":11,"fate":"r32","pd":true},{"team":"Norway","code":"NOR","val":589900000.0,"tot":10,"fate":"alive","pd":false},{"team":"Belgium","code":"BEL","val":547500000.0,"tot":9,"fate":"alive","pd":false},{"team":"Ivory Coast","code":"CIV","val":522100000.0,"tot":5,"fate":"r32","pd":false},{"team":"Senegal","code":"SEN","val":478100000.0,"tot":10,"fate":"r32","pd":false},{"team":"Turkey","code":"TUR","val":473700000.0,"tot":3,"fate":"groups","pd":false},{"team":"Morocco","code":"MAR","val":447700000.0,"tot":7,"fate":"alive","pd":false},{"team":"Sweden","code":"SWE","val":406080000.0,"tot":7,"fate":"r32","pd":false},{"team":"Croatia","code":"CRO","val":387300000.0,"tot":6,"fate":"r32","pd":false},{"team":"United States","code":"USA","val":385650000.0,"tot":10,"fate":"alive","pd":false},{"team":"Ecuador","code":"ECU","val":368700000.0,"tot":2,"fate":"r32","pd":false},{"team":"Uruguay","code":"URU","val":359300000.0,"tot":3,"fate":"groups","pd":false},{"team":"Switzerland","code":"SUI","val":332500000.0,"tot":9,"fate":"alive","pd":false},{"team":"Colombia","code":"COL","val":302350000.0,"tot":5,"fate":"alive","pd":false},{"team":"Japan","code":"JPN","val":270850000.0,"tot":8,"fate":"r32","pd":false},{"team":"Algeria","code":"ALG","val":256900000.0,"tot":5,"fate":"r32","pd":false},{"team":"Austria","code":"AUT","val":245200000.0,"tot":6,"fate":"r32","pd":false},{"team":"Ghana","code":"GHA","val":234350000.0,"tot":2,"fate":"r32","pd":false},{"team":"Canada","code":"CAN","val":198650000.0,"tot":9,"fate":"alive","pd":false},{"team":"Mexico","code":"MEX","val":191850000.0,"tot":8,"fate":"alive","pd":false},{"team":"Paraguay","code":"PAR","val":153650000.0,"tot":3,"fate":"alive","pd":false},{"team":"Bosnia and Herzegovina","code":"BIH","val":146400000.0,"tot":5,"fate":"r32","pd":false},{"team":"DR Congo","code":"COD","val":143900000.0,"tot":5,"fate":"r32","pd":false},{"team":"Egypt","code":"EGY","val":116480000.0,"tot":6,"fate":"alive","pd":false},{"team":"Australia","code":"AUS","val":77450000.0,"tot":3,"fate":"r32","pd":true},{"team":"Cape Verde","code":"CPV","val":54500000.0,"tot":4,"fate":"r32","pd":false},{"team":"South Africa","code":"RSA","val":49250000.0,"tot":2,"fate":"r32","pd":false}],"rBridge":0.808,"fitA":-14.372424085524656,"fitB":1.7330855672378402,"misPct":52};
+  var TEAMS=DATA.teams, ACT3=DATA.act3;
+
+  var NS="http://www.w3.org/2000/svg";
+  function el(n,at){var e=document.createElementNS(NS,n);for(var k in at)e.setAttribute(k,at[k]);return e;}
+  function euro(v){
+    if(v>=1e9) return "€"+(v/1e9).toFixed(2).replace(/\.?0+$/,"")+"bn";
+    return "€"+Math.round(v/1e6)+"m";
+  }
+  function ols(xs,ys){
+    var n=xs.length,sx=0,sy=0,sxx=0,sxy=0;
+    for(var i=0;i<n;i++){sx+=xs[i];sy+=ys[i];sxx+=xs[i]*xs[i];sxy+=xs[i]*ys[i];}
+    var b=(n*sxy-sx*sy)/(n*sxx-sx*sx), a=(sy-b*sx)/n;
+    return {a:a,b:b};
+  }
+  function median(arr){
+    var s=arr.slice().sort(function(a,b){return a-b;}),m=s.length/2;
+    return s.length%2? s[Math.floor(m)] : (s[m-1]+s[m])/2;
+  }
+  function fateChip(f){return "<span class='st' style='color:"+
+    (f==="alive"?"#9fd0ee":f==="r32"?"#e3b7a2":"#ccd2d8")+"'>"+FL[f]+"</span>";}
+
+  /* tap-to-pin tooltips: hover shows, tap pins, tap elsewhere unpins */
+  function tipper(svg,tip,W){
+    var pinned=null;
+    svg.addEventListener("click",function(){
+      if(pinned){pinned.classList.remove("pinned");pinned=null;tip.style.opacity=0;}
+    });
+    return function bind(g,html,px,py){
+      function show(){
+        var rect=svg.getBoundingClientRect(), sx=rect.width/W;
+        tip.style.opacity=1; tip.innerHTML=html;
+        tip.style.left=Math.min(px*sx+16, rect.width-250)+"px";
+        tip.style.top=Math.max(py*sx-14,4)+"px";
+      }
+      g.addEventListener("mousemove",show);
+      g.addEventListener("mouseleave",function(){ if(pinned!==g) tip.style.opacity=0; });
+      g.addEventListener("click",function(e){
+        e.stopPropagation();
+        if(pinned===g){pinned.classList.remove("pinned");pinned=null;tip.style.opacity=0;return;}
+        if(pinned)pinned.classList.remove("pinned");
+        pinned=g; g.classList.add("pinned"); show();
+      });
+    };
+  }
+
+  /* collision-avoiding label placement; curated = {CODE: candidateIndex} */
+  var CANDS=[
+    {dx:0,dy:-1,a:"middle",above:true},   // 0 above
+    {dx:0,dy:1,a:"middle",below:true},    // 1 below
+    {dx:1,dy:0,a:"start"},                // 2 right
+    {dx:-1,dy:0,a:"end"},                 // 3 left
+    {dx:.75,dy:-.75,a:"start"},           // 4 upper-right
+    {dx:-.75,dy:-.75,a:"end"},            // 5 upper-left
+    {dx:.75,dy:.75,a:"start"},            // 6 lower-right
+    {dx:-.75,dy:.75,a:"end"}              // 7 lower-left
+  ];
+  function candPos(it,c){
+    var r=it.r;
+    var tx=it.px + (c.dx===0?0:(c.dx>0? r*Math.abs(c.dx)+ (Math.abs(c.dx)===1?4:0) : -(r*Math.abs(c.dx)+(Math.abs(c.dx)===1?4:0))));
+    var ty;
+    if(c.above) ty=it.py-r-5; else if(c.below) ty=it.py+r+12;
+    else if(c.dy<0) ty=it.py-r*.75-4; else if(c.dy>0) ty=it.py+r*.75+11; else ty=it.py+3.5;
+    return {tx:tx,ty:ty,a:c.a};
+  }
+  function placeLabels(svg,items,obstacles,bounds,curated){
+    var placed=obstacles.slice();
+    function hit(a,b){return !(a.x+a.w<b.x||b.x+b.w<a.x||a.y+a.h<b.y||b.y+b.h<a.y);}
+    items.forEach(function(it){
+      var w=it.code.length*5.4+3,h=9.5;
+      var order = (curated && curated[it.code]!=null)
+        ? [CANDS[curated[it.code]]]
+        : CANDS.concat([{dx:0,dy:-2.6,a:"middle",above:true},{dx:0,dy:2.6,a:"middle",below:true}]);
+      var best=null,bestPen=1e9;
+      for(var i=0;i<order.length;i++){
+        var p=candPos(it,order[i]);
+        var bx=p.a==="middle"?p.tx-w/2:(p.a==="start"?p.tx:p.tx-w);
+        var b={x:bx,y:p.ty-h+2,w:w,h:h},pen=0;
+        if(b.x<bounds.x0||b.x+b.w>bounds.x1||b.y<bounds.y0||b.y+b.h>bounds.y1) pen+=1000;
+        for(var j=0;j<placed.length;j++) if(hit(b,placed[j])) pen+=100;
+        for(var k=0;k<items.length;k++){
+          var o=items[k];
+          if(hit(b,{x:o.px-o.r-1,y:o.py-o.r-1,w:2*o.r+2,h:2*o.r+2})) pen+=(o===it?20:60);
+        }
+        if(pen<bestPen){bestPen=pen;best={x:p.tx,y:p.ty,a:p.a,box:b};}
+        if(pen===0) break;
+      }
+      placed.push(best.box);
+      var t=el("text",{x:best.x,y:best.y,"text-anchor":best.a});
+      t.textContent=it.code; it.g.appendChild(t);
+    });
+  }
+  function dotBoxes(list){
+    return list.map(function(d){return {x:d.px-d.r,y:d.py-d.r,w:2*d.r,h:2*d.r};});
+  }
+  function legendIsolate(host,attr,groupsByKey){
+    var active=null;
+    host.querySelectorAll(".lg["+attr+"]").forEach(function(chip){
+      chip.addEventListener("click",function(){
+        var a=chip.getAttribute(attr);
+        active=(active===a)?null:a;
+        host.querySelectorAll(".lg["+attr+"]").forEach(function(c){
+          c.classList.toggle("dim", active!==null && c.getAttribute(attr)!==active);
+        });
+        Object.keys(groupsByKey).forEach(function(k){
+          groupsByKey[k].forEach(function(g){
+            g.classList.toggle("faded", active!==null && k!==active);
+          });
+        });
+      });
+    });
+  }
+
+  /* =========================================================
+     ACT 1 — conversion gap (48 dots, fate colours, y=x diagonal)
+     ========================================================= */
+  (function(){
+    var svg=document.getElementById("act1"), tip=document.getElementById("tip-act1");
+    var W=760,H=520,m={l:56,r:26,t:26,b:56};
+    var x0=0.2,x1=2.7, y0=0,y1=3.6;
+    function X(v){return m.l+(v-x0)/(x1-x0)*(W-m.l-m.r);}
+    function Y(v){return m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);}
+    var bind=tipper(svg,tip,W);
+
+    [0.5,1.0,1.5,2.0,2.5].forEach(function(gx){
+      svg.appendChild(el("line",{x1:X(gx),y1:m.t,x2:X(gx),y2:H-m.b,class:"grid-line"}));
+      var t=el("text",{x:X(gx),y:H-m.b+20,"text-anchor":"middle",class:"axis-label"});t.textContent=gx.toFixed(1);svg.appendChild(t);
+    });
+    [1,2,3].forEach(function(gy){
+      svg.appendChild(el("line",{x1:m.l,y1:Y(gy),x2:W-m.r,y2:Y(gy),class:"grid-line"}));
+      var t=el("text",{x:m.l-10,y:Y(gy)+4,"text-anchor":"end",class:"axis-label"});t.textContent=gy.toFixed(1);svg.appendChild(t);
+    });
+    var xt=el("text",{x:(m.l+W-m.r)/2,y:H-8,"text-anchor":"middle",class:"axis-label","font-weight":"600"});
+    xt.textContent="xG created per match (group stage)";svg.appendChild(xt);
+    var yt=el("text",{x:16,y:(m.t+H-m.b)/2,"text-anchor":"middle",class:"axis-label","font-weight":"600",
+      transform:"rotate(-90 16 "+((m.t+H-m.b)/2)+")"});
+    yt.textContent="Goals per match (group stage)";svg.appendChild(yt);
+
+    // dashed y=x diagonal, "honest conversion"
+    var d0=Math.max(x0,y0), d1=Math.min(x1,y1);
+    svg.appendChild(el("line",{x1:X(d0),y1:Y(d0),x2:X(d1),y2:Y(d1),class:"quad-line"}));
+    (function(){
+      var lx=1.02,ly=1.02;
+      var ang=Math.atan2(Y(d1)-Y(d0),X(d1)-X(d0))*180/Math.PI;
+      var t=el("text",{x:X(lx),y:Y(ly)-8,class:"diag-tag","text-anchor":"middle",
+        transform:"rotate("+ang+" "+X(lx)+" "+(Y(ly)-8)+")"});
+      t.textContent="honest conversion — 1 goal per xG";svg.appendChild(t);
+    })();
+
+    var dots=[],byFate={alive:[],r32:[],groups:[]},labelItems=[];
+    // labels: all 16 alive (priority 1) + the four narrative eliminated (priority 2)
+    var LBL={};
+    TEAMS.forEach(function(t){if(t.fate==="alive")LBL[t.code]=1;});
+    ["TUR","URU","GER","ECU"].forEach(function(c){LBL[c]=2;});
+    TEAMS.forEach(function(t,i){
+      var px=X(t.xf),py=Y(t.g/3),r=6.5;
+      var g=el("g",{class:"pt"});
+      var c=el("circle",{cx:px,cy:py,r:reduce?r:0,fill:FC[t.fate],"fill-opacity":".85"});
+      g.appendChild(c);
+      bind(g,"<b>"+t.team+"</b> · "+t.code+
+        "<br>xG created "+t.xf.toFixed(2)+" /match"+
+        "<br>Goals "+t.g+" in 3 — "+(t.g/3).toFixed(2)+" /match"+
+        "<br>Gap "+((t.g/3)-t.xf>=0?"+":"")+((t.g/3)-t.xf).toFixed(2)+" goals/match vs xG"+
+        "<br>"+fateChip(t.fate),px,py);
+      g.addEventListener("mouseenter",function(){svg.appendChild(g);});
+      var d={g:g,px:px,py:py,r:r,code:t.code};
+      dots.push(d); byFate[t.fate].push(g);
+      if(LBL[t.code]) labelItems.push(d);
+      svg.appendChild(g);
+      if(!reduce) setTimeout(function(){c.setAttribute("r",r);},12*i+250);
+    });
+    labelItems.sort(function(a,b){return LBL[a.code]-LBL[b.code];}); // alive place first
+    placeLabels(svg,labelItems,dotBoxes(dots.filter(function(d){return !LBL[d.code];})),
+      {x0:m.l+2,x1:W-m.r-2,y0:m.t+2,y1:H-m.b-2},null);
+    legendIsolate(document.getElementById("lg-act1"),"data-f",byFate);
+  })();
+
+  /* =========================================================
+     ACT 3 — goals per euro (32 KO + TUR/URU diamonds)
+     ========================================================= */
+  (function(){
+    var svg=document.getElementById("act3"), tip=document.getElementById("tip-act3");
+    var W=760,H=520,m={l:56,r:30,t:26,b:56};
+    var vmin=Math.log10(14e6), vmax=Math.log10(1.9e9);
+    var y0=-0.5,y1=13.8;
+    function X(v){return m.l+(Math.log10(v)-vmin)/(vmax-vmin)*(W-m.l-m.r);}
+    function Y(v){return m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);}
+    var bind=tipper(svg,tip,W);
+
+    [[20e6,"€20m"],[50e6,"€50m"],[150e6,"€150m"],[400e6,"€400m"],[1e9,"€1bn"],[1.5e9,"€1.5bn"]].forEach(function(tk){
+      svg.appendChild(el("line",{x1:X(tk[0]),y1:m.t,x2:X(tk[0]),y2:H-m.b,class:"grid-line"}));
+      var t=el("text",{x:X(tk[0]),y:H-m.b+20,"text-anchor":"middle",class:"axis-label"});t.textContent=tk[1];svg.appendChild(t);
+    });
+    [0,2,4,6,8,10,12].forEach(function(gy){
+      svg.appendChild(el("line",{x1:m.l,y1:Y(gy),x2:W-m.r,y2:Y(gy),class:"grid-line"}));
+      var t=el("text",{x:m.l-10,y:Y(gy)+4,"text-anchor":"end",class:"axis-label"});t.textContent=gy;svg.appendChild(t);
+    });
+    var xt=el("text",{x:(m.l+W-m.r)/2,y:H-8,"text-anchor":"middle",class:"axis-label","font-weight":"600"});
+    xt.textContent="Squad market value (log scale)";svg.appendChild(xt);
+    var yt=el("text",{x:16,y:(m.t+H-m.b)/2,"text-anchor":"middle",class:"axis-label","font-weight":"600",
+      transform:"rotate(-90 16 "+((m.t+H-m.b)/2)+")"});
+    yt.textContent="Total goals — group + R32";svg.appendChild(yt);
+
+    var dots=[],labelItems=[];
+    var LBL={CAN:1,BRA:1,FRA:1,GER:1,NED:1,PAR:1,EGY:1,TUR:1,URU:1,ENG:1,MEX:1};
+    ACT3.forEach(function(t,i){
+      var px=X(t.val),py=Y(t.tot),r=7;
+      var g=el("g",{class:"pt"});
+      var mark;
+      if(t.fate==="groups"){
+        mark=el("rect",{x:px-r+1,y:py-r+1,width:2*r-2,height:2*r-2,fill:FC.groups,"fill-opacity":".9",
+          transform:"rotate(45 "+px+" "+py+")"});
+      }else{
+        mark=el("circle",{cx:px,cy:py,r:reduce?r:0,fill:FC[t.fate],"fill-opacity":".85"});
+        if(!reduce) (function(c,rr,ii){setTimeout(function(){c.setAttribute("r",rr);},12*ii+250);})(mark,r,i);
+      }
+      g.appendChild(mark);
+      bind(g,"<b>"+t.team+"</b> · "+t.code+
+        "<br>Squad value "+euro(t.val)+
+        "<br>Total goals "+t.tot+(t.fate==="groups"?" (3 group matches only)":"")+
+        "<br>"+euro(t.val/Math.max(t.tot,1))+" per goal"+
+        (t.pd?"<br>died in a shootout":"")+
+        "<br>"+fateChip(t.fate),px,py);
+      g.addEventListener("mouseenter",function(){svg.appendChild(g);});
+      var d={g:g,px:px,py:py,r:r,code:t.code};
+      dots.push(d);
+      if(LBL[t.code]) labelItems.push(d);
+      svg.appendChild(g);
+    });
+    // callout: Canada = Brazil
+    (function(){
+      var can=ACT3.filter(function(t){return t.code==="CAN";})[0];
+      var bra=ACT3.filter(function(t){return t.code==="BRA";})[0];
+      var y=Y(can.tot)-1;
+      svg.appendChild(el("line",{x1:X(can.val)+10,y1:y,x2:X(bra.val)-10,y2:y,class:"callout-line","stroke-dasharray":"2 3"}));
+      var midx=(X(can.val)+X(bra.val))/2;
+      var a=el("text",{x:midx,y:y-24,class:"callout-text","text-anchor":"middle"});a.textContent="same "+can.tot+" goals,";svg.appendChild(a);
+      var b=el("text",{x:midx,y:y-12,class:"callout-sub","text-anchor":"middle"});b.textContent="4.7× the price";svg.appendChild(b);
+    })();
+    // Cape Verde feat-card anchor: dashed gold ring on the CPV marker
+    var ringBox=(function(){
+      var c=ACT3.filter(function(t){return t.code==="CPV";})[0];
+      var px=X(c.val),py=Y(c.tot);
+      svg.appendChild(el("circle",{cx:px,cy:py,r:13,fill:"none",stroke:"#C99A1E",
+        "stroke-width":"2","stroke-dasharray":"3 3"}));
+      return {x:px-14,y:py-14,w:28,h:28};
+    })();
+    if(!LBL.CPV){LBL.CPV=1; labelItems.push(dots.filter(function(d){return d.code==="CPV";})[0]);}
+    placeLabels(svg,labelItems,dotBoxes(dots.filter(function(d){return !LBL[d.code];})).concat([ringBox]),
+      {x0:m.l+2,x1:W-m.r-2,y0:m.t+2,y1:H-m.b-2},{CAN:0,BRA:0,GER:0,NED:1,ENG:0,MEX:1,FRA:0,PAR:1,EGY:1,TUR:1,URU:6});
+  })();
+
+  /* =========================================================
+     BRIDGE — signature chart with fate overlay (port of v2.2)
+     ========================================================= */
+  (function(){
+    var svg=document.getElementById("bridge"), tip=document.getElementById("tip-bridge");
+    var W=760,H=500,m={l:64,r:40,t:30,b:56};
+    var vmin=Math.log10(14e6), vmax=Math.log10(1.9e9);   // padded so QAT/IRQ don't clip
+    var y0=0.15,y1=2.75;
+    function X(v){return m.l+(Math.log10(v)-vmin)/(vmax-vmin)*(W-m.l-m.r);}
+    function Y(v){return m.t+(y1-v)/(y1-y0)*(H-m.t-m.b);}
+    function R(age){return 6+(age-25.9)/(30.5-25.9)*9;}
+    var bind=tipper(svg,tip,W);
+    var obstacles=[];
+
+    [[20e6,"€20m"],[50e6,"€50m"],[150e6,"€150m"],[400e6,"€400m"],[1e9,"€1bn"],[1.5e9,"€1.5bn"]].forEach(function(tk){
+      svg.appendChild(el("line",{x1:X(tk[0]),y1:m.t,x2:X(tk[0]),y2:H-m.b,class:"grid-line"}));
+      var t=el("text",{x:X(tk[0]),y:H-m.b+20,"text-anchor":"middle",class:"axis-label"});t.textContent=tk[1];svg.appendChild(t);
+    });
+    [0.5,1.0,1.5,2.0,2.5].forEach(function(gy){
+      svg.appendChild(el("line",{x1:m.l,y1:Y(gy),x2:W-m.r,y2:Y(gy),class:"grid-line"}));
+      var t=el("text",{x:m.l-10,y:Y(gy)+4,"text-anchor":"end",class:"axis-label"});t.textContent=gy.toFixed(1);svg.appendChild(t);
+    });
+    var xt=el("text",{x:(m.l+W-m.r)/2,y:H-8,"text-anchor":"middle",class:"axis-label","font-weight":"600"});
+    xt.textContent="Squad market value (log scale)";svg.appendChild(xt);
+    var yt=el("text",{x:16,y:(m.t+H-m.b)/2,"text-anchor":"middle",class:"axis-label","font-weight":"600",
+      transform:"rotate(-90 16 "+((m.t+H-m.b)/2)+")"});
+    yt.textContent="xG created per match (group stage)";svg.appendChild(yt);
+
+    var medV=median(TEAMS.map(function(t){return t.val;}));
+    var medX=median(TEAMS.map(function(t){return t.xf;}));
+    svg.appendChild(el("line",{x1:X(medV),y1:m.t,x2:X(medV),y2:H-m.b,class:"quad-line"}));
+    svg.appendChild(el("line",{x1:m.l,y1:Y(medX),x2:W-m.r,y2:Y(medX),class:"quad-line"}));
+    function qt(x,y,txt,anchor){
+      var t=el("text",{x:x,y:y,class:"quad-tag","text-anchor":anchor||"start",fill:"#5c6b73"});
+      t.textContent=txt;svg.appendChild(t);
+      var w=txt.length*7.2;
+      obstacles.push({x:(anchor==="end"?x-w:x),y:y-11,w:w,h:13});
+    }
+    qt(W-m.r-4, m.t+16, "PREMIUM ASSETS","end");
+    qt(m.l+6,  m.t+16, "MONEYBALL");
+    qt(W-m.r-4, H-m.b-10, "CAPITAL DESTROYERS","end");
+    qt(m.l+6,  H-m.b-10, "REBUILDING");
+
+    // trend: OLS log10(value) -> xG created; no inline caption (legend carries it)
+    var fit=ols(TEAMS.map(function(t){return Math.log10(t.val);}),TEAMS.map(function(t){return t.xf;}));
+    var fx0=Math.log10(16e6), fx1=Math.log10(1.75e9);
+    var line=el("line",{x1:X(Math.pow(10,fx0)),y1:Y(fit.a+fit.b*fx0),
+                        x2:X(Math.pow(10,fx1)),y2:Y(fit.a+fit.b*fx1),class:"fit-line"});
+    svg.appendChild(line);
+
+    var dots=[],circles=[],byArch={"Maestros":[],"Controllers":[],"Counter Kings":[],"Warriors":[]},
+        byFate={alive:[],r32:[],groups:[]},labelItems=[];
+    var ANNOT={CAN:1,TUR:1,ESP:1};
+    var CURATED={ALG:3,MEX:1,URU:2,JPN:0,AUT:7,COD:1,EGY:5,CPV:0,RSA:1,QAT:3,CUW:2,IRQ:1,COL:0,USA:1,TUR:2,BEL:0};
+    var order=TEAMS.slice().sort(function(a,b){return b.age-a.age;});
+    order.forEach(function(t,i){
+      var px=X(t.val),py=Y(t.xf),r=R(t.age);
+      var g=el("g",{class:"pt"});
+      var c=el("circle",{cx:px,cy:py,r:reduce?r:0,fill:COL[t.arch],"fill-opacity":".82"});
+      g.appendChild(c);
+      bind(g,"<b>"+t.team+"</b> · "+t.code+
+        "<br>Assigned: "+t.arch+
+        "<br>Value "+euro(t.val)+" · Age "+t.age.toFixed(1)+
+        "<br>Possession "+t.poss+"%"+
+        "<br>xG for "+t.xf.toFixed(2)+" · against "+t.xa.toFixed(2)+" · diff "+(t.xd>0?"+":"")+t.xd.toFixed(2)+
+        "<br>Goals: "+t.g+" group"+(t.r32g!=null?" + "+t.r32g+" R32 = "+t.tot:"")+
+        "<br>"+fateChip(t.fate),px,py);
+      g.addEventListener("mouseenter",function(){svg.appendChild(g);});
+      var d={g:g,px:px,py:py,r:r,code:t.code};
+      dots.push(d);
+      if(!MOBILE || ANNOT[t.code]) labelItems.push(d);
+      svg.appendChild(g);
+      circles.push({c:c,t:t,g:g});
+      byArch[t.arch].push(g); byFate[t.fate].push(g);
+      if(!reduce) setTimeout(function(){c.setAttribute("r",r);},14*i+250);
+    });
+    if(!reduce){setTimeout(function(){line.style.opacity=".85";},14*48+500);}
+    else{line.style.opacity=".85";}
+
+    // callouts — Canada launches left, Turkey launches RIGHT with a short leader
+    function callout(code,dx,dy,l1,l2){
+      var t=TEAMS.filter(function(x){return x.code===code;})[0];
+      var px=X(t.val),py=Y(t.xf);
+      var tx=Math.max(m.l+6,Math.min(W-m.r-6,px+dx));
+      var ty=Math.max(m.t+14,Math.min(H-m.b-20,py+dy));
+      var anch=dx>0?"start":"end", xo=dx>0?4:-4;
+      svg.appendChild(el("line",{x1:px+(dx>0?10:-10),y1:py+(dy>0?8:-8),x2:tx,y2:ty,class:"callout-line"}));
+      var a=el("text",{x:tx+xo,y:ty,"text-anchor":anch,class:"callout-text"});a.textContent=l1;svg.appendChild(a);
+      var b=el("text",{x:tx+xo,y:ty+13,"text-anchor":anch,class:"callout-sub"});b.textContent=l2;svg.appendChild(b);
+      var w=Math.max(l1.length,l2.length)*6.2;
+      obstacles.push({x:(anch==="start"?tx:tx-w),y:ty-10,w:w,h:28});
+    }
+    function tm(code){return TEAMS.filter(function(x){return x.code===code;})[0];}
+    var can=tm("CAN"),tur=tm("TUR"),esp=tm("ESP");
+    callout("CAN",-110,-34,"Canada — Moneyball hero",can.xf.toFixed(2)+" xG/match on "+euro(can.val)+", alive");
+    callout("TUR",34,-26,"Turkey — created, didn't convert",tur.xf.toFixed(2)+" xG/match, "+tur.g+" goals, out");
+    callout("ESP",-40,95,"Spain — best defence",esp.xa.toFixed(2)+" xG conceded / match");
+    placeLabels(svg,labelItems,obstacles.concat(MOBILE?dotBoxes(dots.filter(function(d){return !ANNOT[d.code];})):[]),
+      {x0:m.l+2,x1:W-m.r-2,y0:m.t+2,y1:H-m.b-2},CURATED);
+
+    // colour toggle: archetype <-> fate (three states); archetype view defaults
+    // to the 16 alive at full colour, the 32 eliminated dimmed to 35%
+    var lgA=document.getElementById("lg-bridge-arch"), lgF=document.getElementById("lg-bridge-fate");
+    var mode="arch", undim=false;
+    function applyDim(){
+      circles.forEach(function(o){
+        o.g.classList.toggle("dimmed", mode==="arch" && !undim && o.t.fate!=="alive");
+      });
+    }
+    document.getElementById("seg-bridge").addEventListener("click",function(ev){
+      var b=ev.target.closest("button"); if(!b) return;
+      this.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});
+      b.classList.add("on");
+      mode=b.dataset.mode;
+      circles.forEach(function(o){
+        o.c.setAttribute("fill", mode==="arch" ? COL[o.t.arch] : FC[o.t.fate]);
+        o.g.classList.remove("faded");
+      });
+      lgA.style.display = mode==="arch" ? "" : "none";
+      lgF.style.display = mode==="fate" ? "" : "none";
+      lgA.querySelectorAll(".lg").forEach(function(c){c.classList.remove("dim");});
+      lgF.querySelectorAll(".lg").forEach(function(c){c.classList.remove("dim");});
+      applyDim();
+    });
+    document.getElementById("undim-bridge").addEventListener("change",function(){
+      undim=this.checked; applyDim();
+    });
+    applyDim();
+    legendIsolate(lgA,"data-a",byArch);
+    legendIsolate(lgF,"data-f",byFate);
+  })();
+
+  /* ---- reveals + bar fills ---- */
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      e.target.classList.add("in");
+      e.target.querySelectorAll(".g-bar").forEach(function(b){b.style.width=b.dataset.w+"%";});
+      io.unobserve(e.target);
+    });
+  },{threshold:.1});
+  document.querySelectorAll(".reveal").forEach(function(s){io.observe(s);});
+})();
+</script>
+</body>
+</html>

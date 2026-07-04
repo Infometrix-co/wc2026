@@ -460,9 +460,20 @@
     #bracket .ko-foot .ko-value-meta { white-space: nowrap; overflow: visible; text-overflow: clip; }
     #bracket .ko-foot .ko-full { align-self: flex-start; }
   }
+
+/* Matches/Analysis site tabs (Gate 4) */
+.site-tabs{display:flex;justify-content:center;padding:14px 0 0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.site-tabs a{font-size:13.5px;font-weight:600;letter-spacing:.04em;text-decoration:none;color:#165280;padding:9px 26px;border:1px solid #dfe5ea;background:#fff}
+.site-tabs a:first-child{border-radius:8px 0 0 8px;border-right:0}
+.site-tabs a:last-child{border-radius:0 8px 8px 0}
+.site-tabs a.on{background:#165280;color:#fff;border-color:#165280}
 </style>
 </head>
 <body>
+<nav class="site-tabs" aria-label="Site sections">
+  <a href="index.html" class="on" aria-current="page">Matches</a><a href="analysis.html">Analysis</a>
+</nav>
+
 <div class="wrap">
 
 <header class="page">
