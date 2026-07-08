@@ -149,6 +149,27 @@
   .pens-chip{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
     color:var(--red);border:1px solid var(--red);border-radius:9px;padding:0 6px;margin-left:5px;vertical-align:1px;white-space:nowrap}
   @media(max-width:640px){.g-row{grid-template-columns:minmax(112px,132px) 1fr 58px}.g-row .nm{font-size:11.5px}}
+  /* 55+ mobile typography (Phase 3): all raises land only inside this media block */
+  @media(max-width:640px){
+    .axis-label{font-size:24px}
+    .pt text{font-size:13px}
+    .quad-tag{font-size:22px}
+    .panel .sub,.legend,.seg button,.chk,.tip,.chip-x,.dtab summary,.src .s .d,.method{font-size:14px}
+    .stat .l{font-size:14px}
+    table.data td{font-size:14.5px}
+    table.data th{font-size:12px}
+    .note,.feat p,.g-row .gv,.src .s .t{font-size:14.5px}
+    .qblock p,.disclosure p,.qblock ul{font-size:15px}
+    .g-row .nm{font-size:12.5px}
+    .foot-meta{font-size:12.5px}
+    .pens-chip{font-size:10.5px}
+    .feat .feat-tag{font-size:11.5px}
+    .tag{font-size:12px}
+    /* !important: the Q4 sensitivity note carries an inline font-size a media rule cannot beat otherwise */
+    .qblock p[style]{font-size:14px!important}
+    /* !important: the disclosure sources line carries an inline font-size a media rule cannot beat otherwise */
+    .disclosure p[style]{font-size:14px!important}
+  }
 
   table.data{width:100%;border-collapse:collapse;margin-top:8px;font-family:-apple-system,sans-serif}
   table.data th,table.data td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);font-size:13.5px;white-space:nowrap}
@@ -493,7 +514,7 @@
     <p class="method"><b>Method.</b> The dataset was assembled through an AI coding agent under a strict gate discipline — inspect, dry-run, verify, then write — with every database change backed up and read-back-verified. The discipline caught what trusting the output would not have: 23 reversed scorelines, a value set silently truncated to only the teams that advanced (which would have made "money predicts advancement" a tautology), and null card-counts that would have quietly poisoned the averages. An agent's confident output is a draft, not a fact; the analyst's value is designing the verification. The knockout dataset was built under the same gate discipline — results parsed programmatically from the published bracket, penalty mappings hard-asserted against externally verified values.</p>
     <div class="foot-meta">
       <span>Infometrix · WC2026 · Repton, UK</span>
-      <span class="mono">Group stage + Round of 32 · 88 matches · 48 nations · compiled 04 Jul 2026</span>
+      <span class="mono">Group stage + Round of 32 · 88 matches · 48 nations · compiled 08 Jul 2026</span>
     </div>
   </div>
 </footer>
