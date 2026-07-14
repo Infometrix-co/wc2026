@@ -742,7 +742,7 @@
     // flipping to the left of the row when the right margin is short
     rows.forEach(function(t,i){
       if(t.fate!=="sf") return;
-      var y=m.t+i*rowH+rowH/2, txt=t.xgt.toFixed(1)+" xG · "+t.g+" goals";
+      var y=m.t+i*rowH+rowH/2, txt=t.team+" — "+t.xgt.toFixed(1)+" xG · "+t.g+" goals";
       var wpx=txt.length*5.6, xr=X(Math.max(t.xgt,t.g))+9, a;
       if(xr+wpx<=W-m.r)
         a=el("text",{x:xr,y:y+3,"text-anchor":"start",class:"db-val"});
